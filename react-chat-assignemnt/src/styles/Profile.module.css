@@ -1,0 +1,192 @@
+.wrapper {
+    width: 650px;
+    margin: auto;
+    margin-top: 52px;
+    height: fit-content;
+}
+.profile {
+    width: 103px;
+    height: 42px;
+    /* font-family: Roboto; */
+    font-family: sans-serif;
+    font-size: 36px;
+    line-height: 42px;
+    color: #FFFFFF;
+    font-style: normal;
+    font-weight: normal;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.username{
+  
+    height: 21px;
+    /* font-family: Roboto; */
+    font-family: sans-serif;
+    font-size: 18px;
+    line-height: 21px;
+    color: rgba(255, 255, 255, 0.8);
+}
+.input{
+    width: 600px;
+    height: 61px;
+    border: 2px solid #CCCCCC;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #15202B;
+    padding-left: 16px;
+    color: white;
+    margin-top: 6px;
+    margin-bottom: 18px;
+}
+.submit{
+    position: absolute;
+    right: 68px;
+    bottom: -32px;
+    height: 34px;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 19px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 3px 12px 3px 12px;
+    background: #007BFF;
+    border-radius: 4px;
+    color: #FFFFFF;
+    text-decoration: none;
+    border: none;
+}
+.submit:hover{
+    cursor: pointer;
+}
+
+@media screen and (max-width: 700px) {
+
+    .wrapper {
+        width: 550px;
+        margin-top: 48px;
+    }
+    .profile {
+        width: 80px;
+        height: 39px;
+        /* font-family: Roboto; */
+        
+        font-size: 30px;
+
+    }
+
+    .username{
+        height: 19px;
+        font-size: 16px;
+   
+    }
+    .input{
+        width: 500px;
+        height: 55px;
+        font-size: 13px;
+    
+    }
+    .submit{
+    
+        height: 32px;
+        font-size: 14px;
+
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+
+    .wrapper {
+        width: 480px;
+        margin-top: 44px;
+    }
+    .profile {
+        width: 70px;
+        height: 34px;
+        /* font-family: Roboto; */
+        
+        font-size: 26px;
+
+    }
+
+    .username{
+        height: 16px;
+        font-size: 14px;
+   
+    }
+    .input{
+        width: 450px;
+        height: 48px;
+        font-size: 11px;
+   
+    }
+    .submit{
+        height: 29px;
+        font-size: 12px;
+      
+    }
+
+}
+@media screen and (max-width: 500px) {
+
+    .wrapper {
+        width: 400px;
+        margin-top: 40px;
+    }
+    .profile {
+        width: 63px;
+        height: 30px;
+        font-size: 22px;
+    }
+
+    .username{
+        height: 13px;
+        font-size: 12px;
+   
+    }
+    .input{
+        width: 370px;
+        height: 42px;
+        font-size: 10px;
+       
+    }
+    .submit{
+        height: 26px;
+        font-size: 11px;
+    }
+
+}
+@media screen and (max-width: 400px) {
+
+    .wrapper {
+        width: 300px;
+        margin-top: 35px;
+    }
+    .profile {
+        width: 58px;
+        height: 26px;
+        font-size: 19px;
+    }
+
+    .username{
+        height: 11px;
+        font-size: 10px;
+   
+    }
+    .input{
+        width: 280px;
+        height: 38px;
+        font-size: 9px;
+       
+    }
+    .submit{
+        height: 23px;
+        font-size: 10px;
+    }
+
+}

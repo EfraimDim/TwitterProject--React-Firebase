@@ -1,0 +1,274 @@
+.form{
+    margin: auto;
+    margin-top: 47px;
+    width: 600px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position:relative;
+}
+
+.textArea{
+    margin: auto;
+    width: 600px;
+    height: 180px;
+    border: 2px solid #CCCCCC;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background-color: #15202B;
+    padding: 20px 16px;
+    font-size: 16px;
+    color: #CCCCCC;
+    margin-bottom: 5px;
+}
+.submit, .submit:disabled{
+    position:absolute;
+    right: 10px;
+    bottom: 20px;
+    /* font-family: Roboto; */
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #FFFFFF;
+    background: #007BFF;
+    border-radius: 4px;
+    border: none;
+    padding: 2px 7px 3px 8px;
+    width: 68px;
+    height: 34px;
+}
+.submit:hover{
+    cursor: pointer;
+}
+.submit:disabled{
+    background: grey;
+}
+.submit:disabled:hover{
+    cursor: not-allowed;
+}
+.tweetListContainer{
+    height: fit-content;
+}
+.tweetHolder{
+    margin: auto;
+    margin-top: 15px;
+    box-sizing: border-box;
+    padding: 20px;
+    width: 600px;
+    height: fit-content;
+    background: #343A40;
+    border-radius: 6px;
+}
+.usernameDateWrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.username{
+    width: fit-content;
+    height: 12px;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    color: #6C757D;
+}
+.date{
+    width: fit-content;
+    height: 16px;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    color: #6C757D;
+}
+.tweet{
+    margin-top: 16px;
+    width: 455px;
+    height: fit-content;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;  
+}
+.loadSpinner{  
+    position: absolute;
+    top:0px;
+    right:0px;
+    width:100%;
+    height:100%;
+    background-color:#eceaea;
+    background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxQHBhUSBxMVEBEVFxITFhAXGREVFRYTFxUXFxUVFRcYHSggGholGxYVIzEhJSkrLjEuFx8zOjMsNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKMBNgMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAABwEDBAUGCAL/xAA6EAEAAgAEAwQGBwcFAAAAAAAAAQIDBAURBiExBxJBURMiYXGRoTJCYoGCscEUIyVSU3LwFSQz0eH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANzcANwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFvGxfR15dQfVrxWOcww8bUO5basb+1Zx799jTSbzyAxM7e09dvcxcTHtPjLP/ANPtb6W0LkaPFvpWn5A0l81ev0bTBTVMTDnlbfbzbXE0OJ6Wn79mFmNCvWd8GYtHzBfyvEccozNZj7UdPg3eXzNczh74NomPy9kuGzOFbBtMYsbSt5bOXyeLvgWmJ8vCfuBIQ1Gja1XUK7W9XE8p8W3AAAAAAAAAAAAAAAAAAAAAAAAAAAAmdoBbxcTu15MS8d++8r1/W6PnDpvfmC3h4Hfv7GXTBikcn3WvdjkqAAAACxmsrXNU2x4i0e3w9zkdd0OcjHfwN708fOPf5u1UtHejaeYIr9JOHixOHMxMc4mOu7vOHdYjUsv+82jEryt7fb7nM8V6R/p+PF8H/jtM8vK3Ll/nk1Om5+dPzlb4fh1jwmvjEglUWcnma5vLVvhc4tET8uk+1eAAAAAAAAAAAAAAAAAAAAAAAAAUt9FUmN+oMfur1K7V5qd3nzfYAAAAAAAAMXU8nGfydsO/S0Tz8pRLmKzgY1qYvWs7TCZEY8dZb9k1ybV5RiVi/wB/SQdD2f5/02UvhW+pO9f7Z/8AYdai/gfNzg6/WsTyvFqfrH5JPrzqCoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACP+0uI9NgT47Xj7vVn9UgI37UMfu5zBrHhW8/GYj9AaThq/d4gwO7/UrHx3j9Uw4f0I90Ib4Sj03EeBH24n4RMplrG1QVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQnxvqP7fxJiTSd60n0dfw9fmkvjTXY0TRbWrP7y0d3Dr496fH7kJziTafW5zPzmQdv2Y5T9o16b26YdJn8VpiI+W6VYjaHJdm2kzpuid/Fja+NPpJjyr0r8nXAAAAAAAAAAAAAAAAAAAAAAAAAAA5vtD1+3DPCWNmctETiV7taRPOO/e0ViZjx6vPmndp+pZXVoxb5m+NG+9sG8x6O0eNYrt6vLy8XpbiDSMPXtHxMtnomcPEjaduUxtO8TE+ExMRLy5xxwbjcH6n3M5E2wrTPo8fb1bx4RO3S8eMeyQeluD+KcDinS4xdOtvPKL4czvfDt/Lbx+9vnjzh7Xcfh/UIx9Kv3Lx7praN9+7ePrR/nJO/B3a9ltXpXD1n/aY88vW54Vp+zeOnukEmC1hZiuPhxbAtF6z0tX1o+MLm4KineUtiRWJm87RHWZ5fmD6YOsathaPkbYuftFKR8ZnwrWPGfZDmOJu0fK6RvXKW/acXp3afQiftX6fDdEnEHEWNxDnPSahaJ237tI5UpHlG/X3z+gMvifiG/EOpTiZjlSN4w8LrFa/9z4yz+CtBniDV6xO/ocOYtiW93OK7+1p+HdGxde1CMLKRM7/Sv9WkfzTKeuHtEpoWm1wct4fSt42t5yDZYdIpSIw4iIiIiIjltEdIfQAAAAAAAAAAAAAAAAAAAAAAAAAAANfrWjYOuZC2DqdIxMO3Ws+E+ceU+1sAHnbjXskzGjWti6HE5rLxvPdiJ9NSOu0x9eI845o5mk1vNbRtMdazHOPfE9Hs+Y3hzvEPBGS4hj+JYFZt4YlP3eJH467T8QeZdM1nMaXO+nY+Lg9OVbW25fZnl8nV5TtP1LArtbHjE/upSZ+WzsNT7EKWn+E5q1I8KYtYtt+Ku0z82kxexvPYc/ucTAv7e9ePzqDBxO1HUcam0Y1a+2tKRPz3aPUOIc1qlv4jmMTFjymdo+EbQ6zB7Hs9a/r3wK+c960/KIbzTexna8TqWanaOsYdYrv7rW3/ACBFmHPP38tv0dxwp2fZjWrRfMxOBgde/aJ71o+xWfznklTQ+BclototlcGL3/qYnr238+fT7nSVjuxyBrdB0TB0LJRhafTuxy3nrNp85nxbMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf//Z');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    background-position:center;
+    z-index:10000000;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
+
+@media screen and (max-width: 800px) {
+
+    .form{
+        width: 500px;
+        height: 180px;
+    }
+    
+    .textArea{
+        width: 500px;
+        height: 180px;
+    }
+  
+
+    .tweetHolder{
+        width: 500px;
+
+    }
+  
+    .tweet{
+        width: 455px;
+    }
+
+}
+
+@media screen and (max-width: 650px) {
+
+    .form{
+       
+        margin-top: 25px;
+        width: 400px;
+        height: 180px;
+      
+    }
+    
+    .textArea{
+        width: 400px;
+        height: 150px;
+        padding: 18px 14px;
+        font-size: 14px;
+    }
+    .submit, .submit:disabled{
+        font-size: 12px;
+        width: 55px;
+        height: 28px;
+    }
+
+  
+    .tweetHolder{
+        padding: 14px;
+        width: 400px;
+    }
+  
+    .username{
+        height: 12px;
+        font-size: 14px;
+ 
+    }
+    .date{
+        height: 12px;
+        font-size: 14px;
+    
+       
+    }
+    .tweet{
+        margin-top: 16px;
+        width: 300px;
+        font-size: 12px;
+   
+    }
+  
+}
+
+@media screen and (max-width: 400px) {
+
+    .form{
+        margin-top: 25px;
+        width: 300px;
+        height: 140px;
+      
+    }
+    
+    .textArea{
+        width: 300px;
+        height: 120px;
+        padding: 14px 11px;
+        font-size: 11px;
+    }
+    .submit, .submit:disabled{
+        font-size: 10px;
+        width: 48px;
+        height: 24px;
+    }
+
+  
+    .tweetHolder{
+        padding: 10px;
+        width: 300px;
+    }
+  
+    .username{
+        height: 10px;
+        font-size: 11px;
+   
+    }
+    .date{
+        height: 10px;
+        font-size: 11px;
+       
+    }
+    .tweet{
+        margin-top: 12px;
+        width: 250px;
+        font-size: 10px;
+    }
+  
+}
+
+@media screen and (max-width: 350px) {
+
+    .form{
+        margin-top: 20px;
+        width: 275px;
+        height: 120px;
+    }
+    
+    .textArea{
+        width: 275px;
+        height: 105px;
+        padding: 12px 10px;
+        font-size: 10px;
+    }
+    .submit, .submit:disabled{
+        font-size: 8.5px;
+        width: 44px;
+        height: 22px;
+    }
+
+  
+    .tweetHolder{
+        padding: 9px;
+        width: 275px;
+    }
+  
+    .username{
+        height: 9px;
+        font-size: 10px;
+    }
+    .date{
+        height: 9px;
+        font-size: 10px;
+       
+    }
+    .tweet{
+        margin-top: 10px;
+        width: 225px;
+        font-size: 9px;
+    }
+  
+}
+
+
