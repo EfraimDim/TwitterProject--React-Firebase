@@ -99,6 +99,16 @@ useEffect(() => {
     
   }
 
+  const viewYourTweets = () => {
+    const yourTweets = []
+    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async(document) => {
+      yourTweets.push({ id:document.id, ...document.data()})
+      setTweetList(yourTweets)
+});
+  }
+
 
 
   return (
@@ -114,7 +124,7 @@ useEffect(() => {
         Sign Out
         </div>
       </nav>
-     
+      <div onClick={viewYourTweets}>Your Tweets</div>
       <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet}}>
       {isHome && <Home/>}
      </Tweets.Provider>

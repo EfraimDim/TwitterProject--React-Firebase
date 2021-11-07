@@ -62,7 +62,7 @@ const handleEmailLogin = (e) => {
         const createAccount = await createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp)
         if(createAccount.user){
         alert(`Account Created ${createAccount.user.emailSignUp}`)
-        const userInfo = {emailSignUp: emailSignUp, userID: createAccount.user.uid, usernameSignUp: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false}
+        const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false}
         const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
             userInfo
           );

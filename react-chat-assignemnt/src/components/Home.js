@@ -4,11 +4,11 @@ import Tweets from '../components/TweetsContext'
 import {BottomScrollListener} from 'react-bottom-scroll-listener';
 import { v4 as uuidv4 } from 'uuid';
 
-function Home( ) {
+function Home() {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
-    const { tweetList, addTweet, loading, loadMoreTweets, tenthTweet} = useContext(Tweets);
+    const { tweetList, addTweet, loading, loadMoreTweets, tenthTweet, viewYourOwnTweets} = useContext(Tweets);
     
 
     const handleTweet = (e) => {
@@ -36,6 +36,8 @@ function Home( ) {
         }else{
         loadMoreTweets()}
     }
+
+   
     
     return <div>
         {loading ? <div className={styles.loadSpinner}></div> : 
