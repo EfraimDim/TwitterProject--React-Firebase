@@ -61,12 +61,13 @@ const handleEmailLogin = (e) => {
         const storageRef = ref(storage, uniquePhotoId);
         const createAccount = await createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp)
         if(createAccount.user){
-        alert(`Account Created ${createAccount.user.emailSignUp}`)
+        alert(`Account Created ${usernameSignUp}`)
         const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false}
         const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
             userInfo
           );
         const uploadPhoto = await uploadBytes(storageRef, photoToUpload)
+        login(userInfo)
         }
     }catch(error) {
         console.log(error)

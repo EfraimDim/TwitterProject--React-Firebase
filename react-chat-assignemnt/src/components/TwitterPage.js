@@ -3,7 +3,7 @@ import Home from './Home'
 import Profile from './Profile'
 import { useState, useEffect, useContext} from "react"
 import Tweets from './TweetsContext'
-import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfter, limit, getDocs, endAt, doc, getDoc } from "firebase/firestore"
+import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfter, limit, getDocs, endAt, doc, getDoc, where } from "firebase/firestore"
 import { FirebaseContext } from "../utils/Firebase"
 import { AuthContext } from "./AuthContext"
 import { getAuth } from "firebase/auth";
@@ -99,7 +99,7 @@ useEffect(() => {
     
   }
 
-  const viewYourTweets = () => {
+  const viewYourTweets = async() => {
     const yourTweets = []
     const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`));
     const querySnapshot = await getDocs(q);
