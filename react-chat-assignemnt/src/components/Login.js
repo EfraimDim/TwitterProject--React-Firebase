@@ -11,35 +11,29 @@ import { getFirestore,  doc, setDoc, getDoc } from "firebase/firestore"
 
 export default function Login() {
     const [usernameSignUp, setUsername] = useState('')
-    const [emailSignUp, setEmail] = useState('')
-    const [passwordSignUp, setPassword] = useState('')
+    const [emailSignUp, setEmailSignUp] = useState('')
+    const [passwordSignUp, setPasswordSignUp] = useState('')
     const [emailLogin, setEmailLogin] = useState('')
     const [passwordLogin, setPasswordLogin] = useState('')
-    const [isSignUp, setIsSignUp] = useState(false)
-    const { login  } = useContext(AuthContext);
+    
+    const { login, isSignUp  } = useContext(AuthContext);
 
     const fileInputRef = createRef()
     const storage = getStorage();
     const firebase = useContext(FirebaseContext)
     const db = getFirestore(firebase)
 
-    const navSignUp = () => {
-        setIsSignUp(true)
-      }
-    
-      const navLogin = () => {
-        setIsSignUp(false)
-      }
+
 
       const handleUsernameSignUp = (e) => {
         setUsername(e.target.value)
     }
  
     const handleEmailSignUp = (e) => {
-    setEmail(e.target.value)
+    setEmailSignUp(e.target.value)
 }
     const handlePasswordSignUp = (e) => {
-    setPassword(e.target.value)
+    setPasswordSignUp(e.target.value)
 }
 const handleEmailLogin = (e) => {
     setEmailLogin(e.target.value)
@@ -121,14 +115,6 @@ const handleEmailLogin = (e) => {
     return (
 
     <div>
-        <nav className={styles.navBar}>
-        <div onClick={navSignUp} className={isSignUp ? styles.signUp : styles.signUpUnselected}> 
-        SignUp
-        </div>
-        <div onClick={navLogin} className={isSignUp ? styles.loginUnselected : styles.login}>
-        Login
-        </div>
-      </nav>
        {isSignUp && 
        <div className={styles.wrapper}>
          <div className={styles.signUpHeader}>Sign Up!</div>  
@@ -144,8 +130,6 @@ const handleEmailLogin = (e) => {
         <button type='submit' className={styles.submit}>Sign Up</button>
         </form>
         </div>}
-
-
 
         {!isSignUp &&
         <div>

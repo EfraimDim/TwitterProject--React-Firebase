@@ -1,4 +1,4 @@
-import styles from "../styles/App.module.css"
+import styles from "../styles/TwitterPage.module.css"
 import Home from './Home'
 import Profile from './Profile'
 import { useState, useEffect, useContext} from "react"
@@ -20,17 +20,16 @@ const user = auth.currentUser
 
 const { authInfo } = useContext(AuthContext);
 
-  const [tweetList, setTweetList] = useState([])
+  
   const [yourTweetList, setYourTweetList] = useState([])
   const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
   const [username, setUsername] = useState(authInfo.username)
-  const [isHome, setIsHome] = useState(true)
   const [loading, setLoading] = useState(false)
   const [lastKey, setLastKey] = useState("");
   const [tenthTweet, setTenthTweet] = useState("");
 
 
-  const { logout } = useContext(AuthContext);
+  const {  isHome, tweetList, setTweetList, setIsSearchedList } = useContext(AuthContext);
 
 // the two next useEffect make it so that when a new tweet is added, the scroll position doesnt go back to the first 10,
 //it stays where you were scrolled to :)
@@ -62,13 +61,7 @@ useEffect(() => {
         }
   }, [lastKey]);
 
-  const navHome = () => {
-    setIsHome(true)
-  }
-
-  const navProfile = () => {
-    setIsHome(false)
-  }
+ 
   
   const addTweet = async(newTweet) => {
     try {
@@ -115,25 +108,17 @@ useEffect(() => {
 });
     setYourTweetList(yourTweets)
     setYourTweetListSelected(true)
+    console.log(yourTweets)
+    setIsSearchedList(false)
 }else{
   setYourTweetListSelected(false)
+  setIsSearchedList(false)
 }}
  
 
 
   return (
-    <div style={yourTweetListSelected ? {background:"rgba(240, 250, 250, 0.2)"} : {}}>
-      <nav className={styles.navBar}>
-        <div onClick={navHome} className={isHome ? styles.home : styles.homeUnselected}> 
-        Home
-        </div>
-        <div onClick={navProfile} className={isHome ? styles.profileUnselected : styles.profile}>
-        Profile
-        </div>
-        <div onClick={logout} className={styles.signOut}>
-        Sign Out
-        </div>
-      </nav>
+    <div>
       <div onClick={viewYourTweets}>{yourTweetListSelected ? <div className={styles.yourListSelected}>All Tweets</div> : <div className={styles.yourListUnselected}>My Tweets</div>}</div>
       <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList}}>
       {isHome && <Home/>}
