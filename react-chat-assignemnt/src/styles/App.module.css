@@ -23,6 +23,17 @@ body{
     align-items: center;
     color: #FFFFFF;
 }
+.signOut {
+    margin: 19px 0 23px 750px; 
+    width: fit-content;
+    height: 16px;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+}
 .homeUnselected {
     color: rgba(255, 255, 255, 0.5);
 }
@@ -53,6 +64,10 @@ body{
         width: 800px;
         height: 58px;
     }
+    .signOut {
+        margin-left: 500px; 
+       
+    }
     
 
 }
@@ -63,6 +78,10 @@ body{
     .navBar {
         width: 600px;
         height: 58px;
+    }
+    .signOut {
+        margin-left: 300px; 
+       
     }
     
 
@@ -75,7 +94,10 @@ body{
         width: 400px;
         height: 58px;
     }
-
+    .signOut {
+        margin-left: 150px; 
+       
+    }
 
 }
 
@@ -100,6 +122,10 @@ body{
         height: 16px;
         font-size: 14px;
         line-height: 16px;
+    }
+    .signOut {
+        margin-left: 50px; 
+       
     }
 
 }

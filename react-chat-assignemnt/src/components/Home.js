@@ -1,17 +1,20 @@
 import styles from "../styles/Home.module.css"
-import {useState, useContext} from "react"
+import { useState, useContext } from "react"
 import Tweets from '../components/TweetsContext'
+import {BottomScrollListener} from 'react-bottom-scroll-listener';
+import { v4 as uuidv4 } from 'uuid';
 
 function Home( ) {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
-    const { tweetList, addTweet, loading } = useContext(Tweets);
+    const { tweetList, addTweet, loading, loadMoreTweets, tenthTweet} = useContext(Tweets);
     
 
     const handleTweet = (e) => {
-        setTweet(e.target.value)
-        if(tweet.length >= 140){
+        const currentTweet = e.target.value
+        setTweet(currentTweet)
+        if(currentTweet === "" || currentTweet.length >= 140){
             setIsDisabled(true)
         }else {
             setIsDisabled(false)
@@ -20,16 +23,19 @@ function Home( ) {
 
     const submitTweet = (e) => {
         e.preventDefault();
-        if(tweet === ''){
-            return
-        }else{
         const content = tweet
         const date = new Date().toISOString()
-        // const id = "id" + Math.random().toString(16).slice(2)
-        const newTweet = {content: content, date: date}
+        const tweetID = uuidv4()
+        const newTweet = {content: content, date: date, tweetID: tweetID}
         addTweet(newTweet)
         setTweet('')
-    }}
+    }
+    const loadTenMore = () => {
+        if(tenthTweet === undefined){
+            return
+        }else{
+        loadMoreTweets()}
+    }
     
     return <div>
         {loading ? <div className={styles.loadSpinner}></div> : 
@@ -38,17 +44,20 @@ function Home( ) {
                     <button className={styles.submit} disabled={isDisabled} type="submit">Tweet</button>
                 </form>}
 
+                <BottomScrollListener  onBottom={loadTenMore}>
                 <div className={styles.tweetListContainer}>
                     {tweetList.map((tweet, index) => { return   (
                             <div className={styles.tweetHolder} key={index}>
                                 <div className={styles.usernameDateWrapper}>
-                                    <div className={styles.username}>{tweet.userName}</div>
+                                    <div className={styles.username}>{tweet.username}</div>
                                     <div className={styles.date}>{tweet.date}</div>
                                 </div>
                                 <div className={styles.tweet}>{tweet.content}</div>
                             </div>
                             )})}
                 </div>
+                </BottomScrollListener>
+                {tenthTweet === undefined ? <div className={styles.upToDate}>Up To Date</div> : <div></div> }
 
             </div>
     }

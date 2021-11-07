@@ -109,6 +109,12 @@
     opacity: 0.4;
     filter: alpha(opacity=40);
 }
+.upToDate{
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    margin: 1rem;
+}
 
 
 @media screen and (max-width: 800px) {
