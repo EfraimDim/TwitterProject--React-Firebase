@@ -49,6 +49,14 @@ function App() {
         logout,
         setAuthInfo
       }}>
+        {/* <nav className={styles.navBar}>
+        <div onClick={navSignUp} className={isSignUp ? styles.signUp : styles.signUpUnselected}> 
+        SignUp
+        </div>
+        <div onClick={navLogin} className={isSignUp ? styles.loginUnselected : styles.login}>
+        Login
+        </div>
+      </nav> */}
         {!authInfo && <Login />}
         {authInfo && <TwitterPage />}
       </AuthContext.Provider>

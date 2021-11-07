@@ -21,6 +21,8 @@ const user = auth.currentUser
 const { authInfo } = useContext(AuthContext);
 
   const [tweetList, setTweetList] = useState([])
+  const [yourTweetList, setYourTweetList] = useState([])
+  const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
   const [username, setUsername] = useState(authInfo.username)
   const [isHome, setIsHome] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -34,8 +36,8 @@ const { authInfo } = useContext(AuthContext);
 //it stays where you were scrolled to :)
 
 //also rules have been changed in firebase console to only allow users to read or write
-useEffect(async() => {
-    const querySnapshot = query(collection(db, "tweets"), orderBy("date", "desc"), limit(10));
+async function getFirstTenTweets(){
+  const querySnapshot = query(collection(db, "tweets"), orderBy("date", "desc"), limit(10));
     const newTweets = []
     const documentSnapshots = await getDocs(querySnapshot);
     documentSnapshots.forEach((doc) => newTweets.push({ id:doc.id, ...doc.data()}))
@@ -43,6 +45,9 @@ useEffect(async() => {
     setTenthTweet(newTweets[9])
     const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
     setLastKey(lastVisible)
+}
+useEffect(async() => {
+  getFirstTenTweets()
 },[])
 
 useEffect(() => {
@@ -99,20 +104,25 @@ useEffect(() => {
     
   }
 
-  const viewYourTweets = async() => {
-    const yourTweets = []
-    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async(document) => {
-      yourTweets.push({ id:document.id, ...document.data()})
-      setTweetList(yourTweets)
-});
-  }
 
+  const viewYourTweets = async() => {
+    if(yourTweetListSelected === false){  
+    const yourTweets = []
+    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((document) => {
+      yourTweets.push({ id:document.id, ...document.data()})  
+});
+    setYourTweetList(yourTweets)
+    setYourTweetListSelected(true)
+}else{
+  setYourTweetListSelected(false)
+}}
+ 
 
 
   return (
-    <div>
+    <div style={yourTweetListSelected ? {background:"rgba(240, 250, 250, 0.2)"} : {}}>
       <nav className={styles.navBar}>
         <div onClick={navHome} className={isHome ? styles.home : styles.homeUnselected}> 
         Home
@@ -124,8 +134,8 @@ useEffect(() => {
         Sign Out
         </div>
       </nav>
-      <div onClick={viewYourTweets}>Your Tweets</div>
-      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet}}>
+      <div onClick={viewYourTweets}>{yourTweetListSelected ? <div className={styles.yourListSelected}>All Tweets</div> : <div className={styles.yourListUnselected}>My Tweets</div>}</div>
+      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList}}>
       {isHome && <Home/>}
      </Tweets.Provider>
       {!isHome && <Profile username = {username} setUsername = {setUsername} />}

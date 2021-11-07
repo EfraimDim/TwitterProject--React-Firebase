@@ -16,7 +16,7 @@ export default function Login() {
     const [emailLogin, setEmailLogin] = useState('')
     const [passwordLogin, setPasswordLogin] = useState('')
     const [isSignUp, setIsSignUp] = useState(false)
-    const { login } = useContext(AuthContext);
+    const { login  } = useContext(AuthContext);
 
     const fileInputRef = createRef()
     const storage = getStorage();

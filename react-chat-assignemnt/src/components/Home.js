@@ -8,7 +8,7 @@ function Home() {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
-    const { tweetList, addTweet, loading, loadMoreTweets, tenthTweet, viewYourOwnTweets} = useContext(Tweets);
+    const { tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList} = useContext(Tweets);
     
 
     const handleTweet = (e) => {
@@ -46,6 +46,15 @@ function Home() {
                     <button className={styles.submit} disabled={isDisabled} type="submit">Tweet</button>
                 </form>}
 
+                {yourTweetListSelected ? <div> {yourTweetList.map((tweet, index) => { return   (
+                            <div className={styles.tweetHolder} key={index}>
+                                <div className={styles.usernameDateWrapper}>
+                                    <div className={styles.username}>{tweet.username}</div>
+                                    <div className={styles.date}>{tweet.date}</div>
+                                </div>
+                                <div className={styles.tweet}>{tweet.content}</div>
+                            </div>
+                            )})}</div>  :
                 <BottomScrollListener  onBottom={loadTenMore}>
                 <div className={styles.tweetListContainer}>
                     {tweetList.map((tweet, index) => { return   (
@@ -58,7 +67,7 @@ function Home() {
                             </div>
                             )})}
                 </div>
-                </BottomScrollListener>
+                </BottomScrollListener>}
                 {tenthTweet === undefined ? <div className={styles.upToDate}>Up To Date</div> : <div></div> }
 
             </div>
