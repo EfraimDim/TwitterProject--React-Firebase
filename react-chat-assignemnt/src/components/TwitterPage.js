@@ -22,14 +22,14 @@ const { authInfo } = useContext(AuthContext);
 
   
   const [yourTweetList, setYourTweetList] = useState([])
-  const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
+
   const [username, setUsername] = useState(authInfo.username)
   const [loading, setLoading] = useState(false)
   const [lastKey, setLastKey] = useState("");
   const [tenthTweet, setTenthTweet] = useState("");
 
 
-  const {  isHome, tweetList, setTweetList, setIsSearchedList } = useContext(AuthContext);
+  const {  isHome, tweetList, setTweetList, setIsSearchedList, yourTweetListSelected, setYourTweetListSelected, setShowLikedTweets } = useContext(AuthContext);
 
 // the two next useEffect make it so that when a new tweet is added, the scroll position doesnt go back to the first 10,
 //it stays where you were scrolled to :)
@@ -109,11 +109,12 @@ useEffect(() => {
 });
     setYourTweetList(yourTweets)
     setYourTweetListSelected(true)
-    console.log(yourTweets)
     setIsSearchedList(false)
+    setShowLikedTweets(false)
 }else{
   setYourTweetListSelected(false)
-  setIsSearchedList(false)
+  setIsSearchedList(false) 
+  setShowLikedTweets(false)
 }}
  
 

@@ -14,8 +14,11 @@ function App() {
   const [authInfo, setAuthInfo] = useState(null)
   const [tweetList, setTweetList] = useState([])
   const [searchedTweetList, setSearchedTweetList] = useState([])
+  const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
   const [isSearchedList, setIsSearchedList] = useState(false)
   const [isUserSearch, setIsUserSearch] = useState(false)
+  const [showLikedTweets, setShowLikedTweets] = useState(false)
+  const [likedTweetsList, setLikedTweetsList] = useState([])
   const [isauthfinished, setIsauthfinished] = useState(false)
   const [isHome, setIsHome] = useState(true)
   const [isSignUp, setIsSignUp] = useState(false)
@@ -83,6 +86,8 @@ function App() {
       searchedTweets.push({ id: document.id, ...document.data()})
     })
     setIsSearchedList(true)
+    setShowLikedTweets(false)
+    setYourTweetListSelected(false)
     setSearchedTweetList(searchedTweets)
     setTweetSearch('')
   }}
@@ -98,6 +103,8 @@ function App() {
       searchedUserTweets.push({ id: document.id, ...document.data()})
     })
     setIsSearchedList(true)
+    setShowLikedTweets(false)
+    setYourTweetListSelected(false)
     setSearchedTweetList(searchedUserTweets)
     setUserSearch('')
   }}
@@ -105,6 +112,31 @@ function App() {
   const changeSearch = () => {
     setIsUserSearch(!isUserSearch)
   }
+  const displayLikedTweets = async() => {
+    const likedTweets = []
+    const docRef = doc(db, "users", `${authInfo.userID}`);
+    const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              const likedTweetsID = docSnap.data().likedTweets
+              likedTweetsID.forEach(async(tweetID)=>{
+                console.log(tweetID)
+                const tweetRef = doc(db, "tweets", `${tweetID}`);
+                const docSnap = await getDoc(tweetRef)
+                const tweet = { id:docSnap.id, ...docSnap.data()}
+                likedTweets.push(tweet)
+                setLikedTweetsList([...likedTweets])
+              })
+      setShowLikedTweets(true)
+              } 
+            }
+
+    const displayAllTweets = () => {
+          setLikedTweetsList([])
+          setShowLikedTweets(false)
+          setYourTweetListSelected(false)
+          setIsSearchedList(false)
+            }
+  
 
 
 
@@ -127,7 +159,12 @@ function App() {
         setTweetList,
         searchedTweetList,
         isSearchedList,
-        setIsSearchedList
+        setIsSearchedList,
+        yourTweetListSelected,
+        setYourTweetListSelected,
+        likedTweetsList,
+        showLikedTweets,
+        setShowLikedTweets
       }}>
         
        {authInfo && <nav className={styles.navBar}>
@@ -143,12 +180,13 @@ function App() {
          :
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
         <div className={styles.search} onClick={searchTweet}>Search Tweets</div><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
-
+        {showLikedTweets ? <div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div> :<div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div>}
         <div onClick={logout} className={styles.signOut}>
         Sign Out
          </div>
          </nav>}
-        {!authInfo && <nav className={styles.navBar}><div onClick={navSignUp} className={isSignUp ? styles.home : styles.homeUnselected}> 
+        {!authInfo && <nav className={styles.navBar}>
+        <div onClick={navSignUp} className={isSignUp ? styles.home : styles.homeUnselected}> 
         SignUp
         </div>
         <div onClick={navLogin} className={isSignUp ? styles.profileUnselected : styles.profile}>

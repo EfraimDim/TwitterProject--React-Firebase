@@ -75,7 +75,7 @@ body{
  
 }
 .signOut {
-    margin: 19px 0 23px 400px; 
+    margin: 19px 0 23px 20px; 
     width: fit-content;
     height: 16px;
     font-family: sans-serif;
@@ -125,6 +125,7 @@ body{
     align-items: center;
     color: #FFFFFF;
     cursor: pointer;
+    text-align: center;
 }
 
 
@@ -135,10 +136,7 @@ body{
         width: 800px;
         height: 58px;
     }
-    .signOut {
-        margin-left: 500px; 
-       
-    }
+   
     
 
 }
@@ -150,11 +148,7 @@ body{
         width: 600px;
         height: 58px;
     }
-    .signOut {
-        margin-left: 300px; 
-       
-    }
-    
+  
 
 }
 
@@ -165,10 +159,7 @@ body{
         width: 400px;
         height: 58px;
     }
-    .signOut {
-        margin-left: 150px; 
-       
-    }
+  
 
 }
 
@@ -194,10 +185,7 @@ body{
         font-size: 14px;
         line-height: 16px;
     }
-    .signOut {
-        margin-left: 50px; 
-       
-    }
+    
 
 }
 
