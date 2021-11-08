@@ -25,7 +25,7 @@ const { authInfo } = useContext(AuthContext);
 
   const [username, setUsername] = useState(authInfo.username)
   const [loading, setLoading] = useState(false)
-  const [lastKey, setLastKey] = useState("");
+  const [lastKey, setLastKey] = useState({});
   const [tenthTweet, setTenthTweet] = useState("");
 
 
@@ -45,7 +45,7 @@ async function getFirstTenTweets(){
     const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
     setLastKey(lastVisible)
 }
-useEffect(async() => {
+useEffect(() => {
   getFirstTenTweets()
 },[])
 
