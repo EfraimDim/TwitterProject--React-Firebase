@@ -56,7 +56,7 @@ const handleEmailLogin = (e) => {
         const createAccount = await createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp)
         if(createAccount.user){
         alert(`Account Created ${usernameSignUp}`)
-        const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false}
+        const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false, likedTweets: []}
         const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
             userInfo
           );
@@ -99,8 +99,8 @@ const handleEmailLogin = (e) => {
                 if (docSnap.exists()) {
                     login(docSnap.data());
                 } else {
-                const {displayName, emailSignUp, photoURL, uid} = googleSignIn.user
-                const userInfo = {emailSignUp: emailSignUp, userID: uid, usernameSignUp: displayName, photoURL: photoURL, googleAccount: true}
+                const {displayName, email, photoURL, uid} = googleSignIn.user
+                const userInfo = {email: email, userID: uid, username: displayName, photoURL: photoURL, googleAccount: true, likedTweets: []}
                 const docRef = await setDoc(doc(db, "users", `${uid}`), 
                     userInfo
                   );

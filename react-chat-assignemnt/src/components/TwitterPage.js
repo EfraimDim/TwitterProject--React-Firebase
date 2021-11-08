@@ -73,7 +73,8 @@ useEffect(() => {
           date: newTweet.date,
           content: newTweet.content,
           userID: authInfo.userID,
-          tweetID: newTweet.tweetID
+          tweetID: newTweet.tweetID,
+          likersID: []
         });
       if(docRefTweet.id){
         setLoading(false)
