@@ -8,6 +8,8 @@ import { FirebaseContext } from "../utils/Firebase"
 import { AuthContext } from "./AuthContext"
 import { getAuth } from "firebase/auth";
 import { Link } from "react-router-dom";
+import ViewAnotherUser from "./ViewAnotherUser" 
+
 
 // Project Console: https://console.firebase.google.com/project/twitter-react-project/overview
 // Hosting URL: https://twitter-react-project.web.app
@@ -19,7 +21,7 @@ const db = getFirestore(firebase)
 const auth = getAuth()
 const user = auth.currentUser
 
-const { authInfo } = useContext(AuthContext);
+const { authInfo, viewAnotherUser } = useContext(AuthContext);
 
   
   const [yourTweetList, setYourTweetList] = useState([])
@@ -75,7 +77,8 @@ useEffect(() => {
           content: newTweet.content,
           userID: authInfo.userID,
           tweetID: newTweet.tweetID,
-          likersID: []
+          likersID: [],
+          userPhotoURL: authInfo.photoURL
         });
       if(docRefTweet.id){
         setLoading(false)
@@ -99,15 +102,18 @@ useEffect(() => {
     
   }
 
-
-  const viewYourTweets = async() => { 
-    const yourTweets = []
-    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((document) => {
-      yourTweets.push({ id:document.id, ...document.data()})  
+const loadYourTweets = async() => {
+  const yourTweets = []
+  const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((document) => {
+    yourTweets.push({ id:document.id, ...document.data()})  
 });
-    setYourTweetList(yourTweets)
+  setYourTweetList(yourTweets)
+
+}
+  const viewYourTweets = async() => { 
+    loadYourTweets()
     setYourTweetListSelected(true)
 }
 
@@ -119,11 +125,18 @@ const viewAllTweets = () =>{
 
   return (
     <div>
-      <div onClick={viewYourTweets}>{yourTweetListSelected ? <Link to="/"><div className={styles.yourListSelected}>All Tweets</div></Link> : <Link to="/myTweets"><div onClick={viewAllTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}</div>
-      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets }}>
-      {isHome && <Home/>}
+      {viewAnotherUser ? <ViewAnotherUser/> : <>
+      <div>
+         {yourTweetListSelected ?
+         <Link to="/">
+          <div  onClick={viewAllTweets}  className={styles.yourListSelected}>All Tweets</div></Link> : 
+          <Link to="/myTweets">
+            <div onClick={viewYourTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}
+            </div>
+      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets, loadYourTweets }}>
+      {isHome &&  <Home/>}
      </Tweets.Provider>
-      {!isHome && <Profile username = {username} setUsername = {setUsername} />}
+      {!isHome && <Profile username = {username} setUsername = {setUsername} />}</>}
     </div>
   );
 }

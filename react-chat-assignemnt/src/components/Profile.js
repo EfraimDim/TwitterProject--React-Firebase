@@ -19,18 +19,7 @@ function Profile( {username, setUsername} ) {
         
         
         useEffect(async() => {
-        if(authInfo.googleAccount === false){
-        const starsRef = ref(storage, `${authInfo.photoURL}`);
-          getDownloadURL(starsRef)
-          .then((url) => {
-         setProfilePhotoURL(url)
-          })
-          .catch((error) => {
-          alert(`${error}`)
-          console.log(error)
-          });}else{
             setProfilePhotoURL(authInfo.photoURL)
-          }
         },[])
 
         const handleNewUsername = (e) => {

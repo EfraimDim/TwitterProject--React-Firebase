@@ -1,5 +1,5 @@
 import styles from "../styles/Home.module.css"
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import Tweets from '../components/TweetsContext'
 import {BottomScrollListener} from 'react-bottom-scroll-listener';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,9 +12,13 @@ function Home() {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
-    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets } = useContext(Tweets);
-    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet } = useContext(AuthContext);
+    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets, loadYourTweets } = useContext(Tweets);
+    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet,loadLikedTweets } = useContext(AuthContext);
 
+    // useEffect(() => {
+    // loadLikedTweets()
+    // loadYourTweets()
+    // },[])
    
 
     const handleTweet = (e) => {
@@ -48,6 +52,7 @@ function Home() {
    
     
     return <div>
+        
         {loading ? <div className={styles.loadSpinner}></div> : 
                 <form className={styles.form} onSubmit={submitTweet}>
                     <textarea minLength='1' className={styles.textArea} placeholder="what you have in mind?" value={tweet} onChange={handleTweet}/>
@@ -59,11 +64,11 @@ function Home() {
                         <div className={styles.tweetHolder} key={index}>
                                <DisplayTweet tweet= {tweet} reRenderFunction= {displayLikedTweets}/>
                             </div>)})}</div>}/>
-                <Route path="/searchTweets" element={<div className={styles.div}> {searchedTweetList.map((tweet, index) => { return   (
+                <Route path="/searchTweets" element={<> {searchedTweetList.map((tweet, index) => { return   (
                             <div className={styles.tweetHolder} key={index}>
                                <DisplayTweet tweet= {tweet} reRenderFunction={isUserSearch ? searchUser : searchTweet}/> 
                             </div>
-                            )})}</div>}/>
+                            )})}</>}/>
                  
                 <Route path="/myTweets" element={<div> {yourTweetList.map((tweet, index) => {  
                     return   (

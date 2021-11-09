@@ -16,7 +16,8 @@ function App() {
   const [tweetList, setTweetList] = useState([])
   const [searchedTweetList, setSearchedTweetList] = useState([])
   const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
-  
+  const [viewAnotherUser, setViewAnotherUser] = useState(false)
+  const [viewedUserID, setViewedUserID] = useState('')
   const [isUserSearch, setIsUserSearch] = useState(false)
   const [showLikedTweets, setShowLikedTweets] = useState(false)
   const [likedTweetsList, setLikedTweetsList] = useState([])
@@ -105,28 +106,35 @@ function App() {
   const changeSearch = () => {
     setIsUserSearch(!isUserSearch)
   }
-  const displayLikedTweets = async() => {
+
+  const loadLikedTweets = async() =>{
     const likedTweets = []
     const docRef = doc(db, "users", `${authInfo.userID}`);
     const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const likedTweetsID = docSnap.data().likedTweets
               likedTweetsID.forEach(async(tweetID)=>{
-                console.log(tweetID)
                 const tweetRef = doc(db, "tweets", `${tweetID}`);
                 const docSnap = await getDoc(tweetRef)
                 const tweet = { id:docSnap.id, ...docSnap.data()}
                 likedTweets.push(tweet)
                 setLikedTweetsList([...likedTweets])
-              })
+              })}}
+  
+  const displayLikedTweets = async() => {
+      loadLikedTweets()
       setShowLikedTweets(true)
               } 
-            }
+            
 
     const displayAllTweets = () => {
           setLikedTweetsList([])
           setShowLikedTweets(false)
             }
+    
+    const returnToTweets = () => {
+      setViewAnotherUser(false)
+    }
   
 
 
@@ -157,10 +165,22 @@ function App() {
         displayLikedTweets,
         isUserSearch,
         searchUser,
-        searchTweet
+        searchTweet,
+        viewAnotherUser,
+        setViewAnotherUser,
+        viewedUserID,
+        setViewedUserID,
+        loadLikedTweets
       }}>
-        
-       {authInfo && <nav className={styles.navBar}>
+       {authInfo && viewAnotherUser && <nav className={styles.navBar}>
+        <div onClick={returnToTweets} className={styles.home }> 
+        Return
+       </div>
+        {/* <div onClick={logout} className={styles.signOut}>
+        Sign Out
+         </div> */}
+         </nav>} 
+       {authInfo && !viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={navHome} className={isHome ? styles.home : styles.homeUnselected}> 
         Home
        </div>

@@ -4,7 +4,7 @@ import { useState, useContext } from "react"
 import styles from "../styles/Login.module.css"
 import { AuthContext } from "./AuthContext"
 import { createRef } from 'react'
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FirebaseContext } from "../utils/Firebase"
 import { getFirestore,  doc, setDoc, getDoc } from "firebase/firestore"
 
@@ -55,14 +55,17 @@ const handleEmailLogin = (e) => {
         const storageRef = ref(storage, uniquePhotoId);
         const createAccount = await createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp)
         if(createAccount.user){
-        alert(`Account Created ${usernameSignUp}`)
-        const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: uniquePhotoId, googleAccount: false, likedTweets: []}
-        const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
+            const uploadPhoto = await uploadBytes(storageRef, photoToUpload)
+            if(uploadPhoto.metadata){
+                const starsRef = ref(storage, `${uniquePhotoId}`);
+                const photoURLFromStorage = await getDownloadURL(starsRef)
+            alert(`Account Created ${usernameSignUp}`)
+            const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: photoURLFromStorage, googleAccount: false, likedTweets: []}
+            const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
             userInfo
           );
-        const uploadPhoto = await uploadBytes(storageRef, photoToUpload)
         login(userInfo)
-        }
+        }}
     }catch(error) {
         console.log(error)
         alert(`${error}`)
