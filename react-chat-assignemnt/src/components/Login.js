@@ -141,7 +141,7 @@ const handleEmailLogin = (e) => {
         <label className={styles.label}>Email</label>
         <input className={styles.input} required type="text" value={emailLogin} onChange={handleEmailLogin} placeholder="enter email" />
         <label className={styles.label}>Password</label>
-        <input className={styles.input} required type="passwordSignUp" value={passwordLogin} onChange={handlePasswordLogin} placeholder="enter password" />
+        <input className={styles.input} required type="password" value={passwordLogin} onChange={handlePasswordLogin} placeholder="enter password" />
         <button type='submit' className={styles.submit}>Login</button>
         </form>
         </div>
