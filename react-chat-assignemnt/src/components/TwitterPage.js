@@ -7,6 +7,7 @@ import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfte
 import { FirebaseContext } from "../utils/Firebase"
 import { AuthContext } from "./AuthContext"
 import { getAuth } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 // Project Console: https://console.firebase.google.com/project/twitter-react-project/overview
 // Hosting URL: https://twitter-react-project.web.app
@@ -29,7 +30,7 @@ const { authInfo } = useContext(AuthContext);
   const [tenthTweet, setTenthTweet] = useState("");
 
 
-  const {  isHome, tweetList, setTweetList, setIsSearchedList, yourTweetListSelected, setYourTweetListSelected, setShowLikedTweets } = useContext(AuthContext);
+  const {  isHome, tweetList, setTweetList, yourTweetListSelected, setYourTweetListSelected } = useContext(AuthContext);
 
 // the two next useEffect make it so that when a new tweet is added, the scroll position doesnt go back to the first 10,
 //it stays where you were scrolled to :)
@@ -99,8 +100,7 @@ useEffect(() => {
   }
 
 
-  const viewYourTweets = async() => {
-    if(yourTweetListSelected === false){  
+  const viewYourTweets = async() => { 
     const yourTweets = []
     const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
     const querySnapshot = await getDocs(q);
@@ -109,20 +109,18 @@ useEffect(() => {
 });
     setYourTweetList(yourTweets)
     setYourTweetListSelected(true)
-    setIsSearchedList(false)
-    setShowLikedTweets(false)
-}else{
+}
+
+const viewAllTweets = () =>{
   setYourTweetListSelected(false)
-  setIsSearchedList(false) 
-  setShowLikedTweets(false)
-}}
+}
  
 
 
   return (
     <div>
-      <div onClick={viewYourTweets}>{yourTweetListSelected ? <div className={styles.yourListSelected}>All Tweets</div> : <div className={styles.yourListUnselected}>My Tweets</div>}</div>
-      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList}}>
+      <div onClick={viewYourTweets}>{yourTweetListSelected ? <Link to="/"><div className={styles.yourListSelected}>All Tweets</div></Link> : <Link to="/myTweets"><div onClick={viewAllTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}</div>
+      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets }}>
       {isHome && <Home/>}
      </Tweets.Provider>
       {!isHome && <Profile username = {username} setUsername = {setUsername} />}

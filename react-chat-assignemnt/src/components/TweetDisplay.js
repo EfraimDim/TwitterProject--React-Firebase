@@ -4,7 +4,7 @@ import { FirebaseContext } from "../utils/Firebase"
 import {AuthContext} from "./AuthContext"
 import styles from "../styles/Home.module.css"
 
-function DisplayTweet({tweet}) {
+function DisplayTweet({tweet, reRenderFunction}) {
 
     const firebase = useContext(FirebaseContext)
     const db = getFirestore(firebase)
@@ -18,6 +18,7 @@ function DisplayTweet({tweet}) {
         await updateDoc(userRef, {
             likedTweets: arrayUnion(`${tweet.id}`)
 })
+reRenderFunction()
 };
 
     const unlikeTweet = async(tweet) => {
@@ -29,6 +30,7 @@ function DisplayTweet({tweet}) {
         await updateDoc(userRef, {
             likedTweets: arrayRemove(`${tweet.id}`)
     })
+    reRenderFunction()
     };
     
     return < >

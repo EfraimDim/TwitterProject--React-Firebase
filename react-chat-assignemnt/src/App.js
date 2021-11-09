@@ -6,6 +6,7 @@ import { AuthContext } from "./components/AuthContext"
 import { FirebaseContext } from "./utils/Firebase"
 import { getAuth, onAuthStateChanged, signOut  } from "firebase/auth";
 import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfter, limit, getDocs, endAt, doc, getDoc, where } from "firebase/firestore"
+import { Link } from "react-router-dom";
 
 // Project Console: https://console.firebase.google.com/project/twitter-react-project/overview
 // Hosting URL: https://twitter-react-project.web.app
@@ -15,7 +16,7 @@ function App() {
   const [tweetList, setTweetList] = useState([])
   const [searchedTweetList, setSearchedTweetList] = useState([])
   const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
-  const [isSearchedList, setIsSearchedList] = useState(false)
+  
   const [isUserSearch, setIsUserSearch] = useState(false)
   const [showLikedTweets, setShowLikedTweets] = useState(false)
   const [likedTweetsList, setLikedTweetsList] = useState([])
@@ -85,11 +86,7 @@ function App() {
     querySnapshot.forEach((document) => {
       searchedTweets.push({ id: document.id, ...document.data()})
     })
-    setIsSearchedList(true)
-    setShowLikedTweets(false)
-    setYourTweetListSelected(false)
     setSearchedTweetList(searchedTweets)
-    setTweetSearch('')
   }}
 
   const searchUser = async() => {
@@ -102,11 +99,7 @@ function App() {
     querySnapshot.forEach((document) => {
       searchedUserTweets.push({ id: document.id, ...document.data()})
     })
-    setIsSearchedList(true)
-    setShowLikedTweets(false)
-    setYourTweetListSelected(false)
     setSearchedTweetList(searchedUserTweets)
-    setUserSearch('')
   }}
 
   const changeSearch = () => {
@@ -133,8 +126,6 @@ function App() {
     const displayAllTweets = () => {
           setLikedTweetsList([])
           setShowLikedTweets(false)
-          setYourTweetListSelected(false)
-          setIsSearchedList(false)
             }
   
 
@@ -158,13 +149,15 @@ function App() {
         tweetList,
         setTweetList,
         searchedTweetList,
-        isSearchedList,
-        setIsSearchedList,
         yourTweetListSelected,
         setYourTweetListSelected,
         likedTweetsList,
         showLikedTweets,
-        setShowLikedTweets
+        setShowLikedTweets,
+        displayLikedTweets,
+        isUserSearch,
+        searchUser,
+        searchTweet
       }}>
         
        {authInfo && <nav className={styles.navBar}>
@@ -176,11 +169,11 @@ function App() {
         </div>
         {isUserSearch ? 
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={userSearch} onChange={handleUserSearch} placeholder="search user"/>
-        <div className={styles.search} onClick={searchUser}>Search Users</div><div className={styles.searchChange} onClick={changeSearch}>change to tweet search</div></div>
+        <Link to="/searchTweets" ><div className={styles.search} onClick={searchUser}>Search Users</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to tweet search</div></div>
          :
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
-        <div className={styles.search} onClick={searchTweet}>Search Tweets</div><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
-        {showLikedTweets ? <div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div> :<div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div>}
+        <Link to="/searchTweets"><div className={styles.search} onClick={searchTweet}>Search Tweets</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
+        {showLikedTweets ? <Link to="/"><div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div></Link> : <Link to="/likedTweets"><div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div> </Link>}
         <div onClick={logout} className={styles.signOut}>
         Sign Out
          </div>
