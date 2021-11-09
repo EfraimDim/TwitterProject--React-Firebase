@@ -4,21 +4,26 @@ import Tweets from '../components/TweetsContext'
 import {BottomScrollListener} from 'react-bottom-scroll-listener';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from "./AuthContext"
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import DisplayTweet from "./TweetDisplay"
+
 
 
 function Home() {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
-    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets, loadYourTweets } = useContext(Tweets);
-    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet,loadLikedTweets } = useContext(AuthContext);
-
-    // useEffect(() => {
-    // loadLikedTweets()
-    // loadYourTweets()
-    // },[])
+    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets } = useContext(Tweets);
+    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet} = useContext(AuthContext);
+    const location = useLocation()
+    
+    useEffect(() => {
+    if(location.pathname === "/myTweets"){
+        viewYourTweets()
+    }
+    if(location.pathname === "/likedTweets")
+        displayLikedTweets()
+    },[])
    
 
     const handleTweet = (e) => {

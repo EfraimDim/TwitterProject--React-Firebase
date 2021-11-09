@@ -102,18 +102,15 @@ useEffect(() => {
     
   }
 
-const loadYourTweets = async() => {
-  const yourTweets = []
-  const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((document) => {
-    yourTweets.push({ id:document.id, ...document.data()})  
-});
-  setYourTweetList(yourTweets)
 
-}
   const viewYourTweets = async() => { 
-    loadYourTweets()
+    const yourTweets = []
+    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((document) => {
+      yourTweets.push({ id:document.id, ...document.data()})  
+  });
+    setYourTweetList(yourTweets)
     setYourTweetListSelected(true)
 }
 
@@ -133,7 +130,7 @@ const viewAllTweets = () =>{
           <Link to="/myTweets">
             <div onClick={viewYourTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}
             </div>
-      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets, loadYourTweets }}>
+      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets }}>
       {isHome &&  <Home/>}
      </Tweets.Provider>
       {!isHome && <Profile username = {username} setUsername = {setUsername} />}</>}

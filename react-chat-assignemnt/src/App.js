@@ -107,7 +107,8 @@ function App() {
     setIsUserSearch(!isUserSearch)
   }
 
-  const loadLikedTweets = async() =>{
+ 
+  const displayLikedTweets = async() => {
     const likedTweets = []
     const docRef = doc(db, "users", `${authInfo.userID}`);
     const docSnap = await getDoc(docRef);
@@ -119,10 +120,7 @@ function App() {
                 const tweet = { id:docSnap.id, ...docSnap.data()}
                 likedTweets.push(tweet)
                 setLikedTweetsList([...likedTweets])
-              })}}
-  
-  const displayLikedTweets = async() => {
-      loadLikedTweets()
+              })}
       setShowLikedTweets(true)
               } 
             
@@ -169,8 +167,7 @@ function App() {
         viewAnotherUser,
         setViewAnotherUser,
         viewedUserID,
-        setViewedUserID,
-        loadLikedTweets
+        setViewedUserID
       }}>
        {authInfo && viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={returnToTweets} className={styles.home }> 
