@@ -5,7 +5,7 @@ import Login from "./components/Login"
 import { AuthContext } from "./components/AuthContext"
 import { FirebaseContext } from "./utils/Firebase"
 import { getAuth, onAuthStateChanged, signOut  } from "firebase/auth";
-import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfter, limit, getDocs, endAt, doc, getDoc, where } from "firebase/firestore"
+import { getFirestore, collection, orderBy, query, getDocs, doc, getDoc, where } from "firebase/firestore"
 import { Link } from "react-router-dom";
 
 // Project Console: https://console.firebase.google.com/project/twitter-react-project/overview
@@ -26,6 +26,8 @@ function App() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [tweetSearch, setTweetSearch] = useState('')
   const [userSearch, setUserSearch] = useState('')
+  const [myFollowing, setMyFollowing] = useState([])
+
 
   const auth = getAuth();
   const firebase = useContext(FirebaseContext)
@@ -37,12 +39,25 @@ function App() {
         const {uid} = user
         const docRef = doc(db, "users", `${uid}`);
         const docSnap = await getDoc(docRef);
+        const myFollowersList = []
         if (docSnap.exists()) {
-            setAuthInfo(docSnap.data());}
-        } 
-      setIsauthfinished(true)
-});
-  },[])
+            setAuthInfo(docSnap.data());
+            const followingList = docSnap.data().followingID
+            followingList.forEach(async(userID) => {
+             const docRefFollowing = doc(db, "users", `${userID}`);
+             const docSnap = await getDoc(docRefFollowing);
+             const user = docSnap.data()
+             const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username}
+             myFollowersList.push(userDisplayInfo)
+             setMyFollowing([...myFollowersList])  
+        })
+        setIsauthfinished(true) }
+};
+  })},[])
+
+ 
+
+  
 
   const logout = () => {
     signOut(auth).then(() => {
@@ -167,7 +182,9 @@ function App() {
         viewAnotherUser,
         setViewAnotherUser,
         viewedUserID,
-        setViewedUserID
+        setViewedUserID,
+        myFollowing,
+        setMyFollowing
       }}>
        {authInfo && viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={returnToTweets} className={styles.home }> 
@@ -191,6 +208,7 @@ function App() {
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
         <Link to="/searchTweets"><div className={styles.search} onClick={searchTweet}>Search Tweets</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
         {showLikedTweets ? <Link to="/"><div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div></Link> : <Link to="/likedTweets"><div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div> </Link>}
+        <Link to="/whoImFollowing"><div className={styles.search}>Following</div></Link>
         <div onClick={logout} className={styles.signOut}>
         Sign Out
          </div>

@@ -1,0 +1,11 @@
+.usersWrapper {
+    margin:auto;
+    width: 800px;
+    height:fit-content;
+   
+}
+.user {
+    margin:auto;
+    display: flex;
+    align-self: center;
+}

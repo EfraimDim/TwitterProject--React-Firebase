@@ -4,11 +4,13 @@ import { FirebaseContext } from "../utils/Firebase"
 import {AuthContext} from "./AuthContext"
 import styles from "../styles/Home.module.css"
 
+
 function DisplayTweet({tweet, reRenderFunction}) {
 
     const firebase = useContext(FirebaseContext)
     const db = getFirestore(firebase)
     const { authInfo, setViewAnotherUser, setViewedUserID  } = useContext(AuthContext);
+ 
 
     const likeTweet = async(tweet) => {
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
@@ -41,17 +43,27 @@ if(reRenderFunction){
         setViewedUserID(`${userID}`) 
         setViewAnotherUser(true)
     }
+
+    
     
     return < >  <div className={styles.photoWrapper}>
                 <img className={styles.profileImage} src={tweet.userPhotoURL} />
                 <div>
                 <div className={styles.usernameDateWrapper}>
+                    <div className={styles.usernameDateWrapper}>
                     <div onClick={() => viewUserProfile(tweet.userID)} className={styles.username}>{tweet.username}</div>
+                    {tweet.userID === authInfo.userID ? <></> :
+                     <>{authInfo.followingID.includes(`${tweet.userID}`) ? 
+                    <div className={styles.unfollow}>Following</div> 
+                    :  <></>}
+                    </>}
+                    </div>
                     <div className={styles.date}>{tweet.date}</div>
                 </div>
                 <div className={styles.usernameDateWrapper}>
                     <div className={styles.tweet}>{tweet.content}</div>
-                    {tweet.likersID.includes(`${authInfo.userID}`) ? <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div> 
+                    {tweet.likersID.includes(`${authInfo.userID}`) ? 
+                    <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div> 
                     : <div className={styles.likeButton}  onClick={() =>likeTweet(tweet)}>Like</div> }
                 </div>
                 </div>

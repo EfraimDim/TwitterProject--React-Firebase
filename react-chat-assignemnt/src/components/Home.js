@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from "./AuthContext"
 import { Routes, Route, useLocation } from "react-router-dom";
 import DisplayTweet from "./TweetDisplay"
+import WhoImFollowing from "./WhoImFollowing" 
 
 
 
@@ -13,8 +14,10 @@ function Home() {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
+    
+
     const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets } = useContext(Tweets);
-    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet} = useContext(AuthContext);
+    const {  tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, isUserSearch, searchUser, searchTweet, myFollowing} = useContext(AuthContext)
     const location = useLocation()
     
     useEffect(() => {
@@ -24,8 +27,8 @@ function Home() {
     if(location.pathname === "/likedTweets")
         displayLikedTweets()
     },[])
-   
 
+  
     const handleTweet = (e) => {
         const currentTweet = e.target.value
         setTweet(currentTweet)
@@ -58,13 +61,9 @@ function Home() {
     
     return <div>
         
-        {loading ? <div className={styles.loadSpinner}></div> : 
-                <form className={styles.form} onSubmit={submitTweet}>
-                    <textarea minLength='1' className={styles.textArea} placeholder="what you have in mind?" value={tweet} onChange={handleTweet}/>
-                    <button className={styles.submit} disabled={isDisabled} type="submit">Tweet</button>
-                </form>}
+        
                 <Routes>    
-               
+               <Route path="/whoImFollowing" element={<WhoImFollowing myFollowing={myFollowing} />}></Route>
                 <Route path="/likedTweets" element={<div className={styles.div}> {likedTweetsList.map((tweet, index) => { return   (
                         <div className={styles.tweetHolder} key={index}>
                                <DisplayTweet tweet= {tweet} reRenderFunction= {displayLikedTweets}/>
@@ -81,7 +80,13 @@ function Home() {
                             <DisplayTweet tweet= {tweet} reRenderFunction= {viewYourTweets}/>
                             </div>
                             )})}</div>}/>
-                 <Route path="/" element={<BottomScrollListener  onBottom={loadTenMore}>
+                 <Route path="/" element={
+                {loading ? <div className={styles.loadSpinner}></div> : 
+                <form className={styles.form} onSubmit={submitTweet}>
+                    <textarea minLength='1' className={styles.textArea} placeholder="what you have in mind?" value={tweet} onChange={handleTweet}/>
+                    <button className={styles.submit} disabled={isDisabled} type="submit">Tweet</button>
+                </form>}
+                 <BottomScrollListener  onBottom={loadTenMore}>
                 <div className={styles.tweetListContainer}>
                     {tweetList.map((tweet, index) => { 
                       
@@ -91,9 +96,10 @@ function Home() {
                             </div>
                             )})}
                 </div>
-                </BottomScrollListener>}/>
+                </BottomScrollListener>
+              {tenthTweet === undefined ? <div className={styles.upToDate}>Up To Date</div> : <div></div> }}/>
                 </Routes>
-                {tenthTweet === undefined ? <div className={styles.upToDate}>Up To Date</div> : <div></div> }
+              
 
             </div>
     }
