@@ -2,7 +2,7 @@ import styles from '../styles/Profile.module.css'
 import {useState, useContext, useEffect, createRef} from 'react'
 import { getDownloadURL, ref, getStorage, uploadBytes } from "firebase/storage";
 import { AuthContext } from "./AuthContext"
-import { doc, updateDoc, getFirestore, collection, query, where, getDocs, setDoc } from "firebase/firestore";
+import { doc, updateDoc, getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import { FirebaseContext } from "../utils/Firebase"
 import { getAuth, updatePassword } from "firebase/auth";
 
@@ -39,6 +39,7 @@ function Profile( {username, setUsername} ) {
 
         const saveUsername = async(e) => {
         e.preventDefault();
+        try{
         setUsername(newUsername)
         const usernameRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(usernameRef, {
@@ -55,10 +56,13 @@ function Profile( {username, setUsername} ) {
                 });
 });
         alert("Username Saved!")
-    }
+    }catch(error){
+        console.log(error)
+    }}
 
     const uploadNewPhoto = async(e) => {
         e.preventDefault();
+        try{
         const photoToUpload = fileInputRef.current.files[0]
         const uniquePhotoId = `id${photoToUpload.name}` + Math.random().toString(16).slice(2)
         const storageRef = ref(storage, uniquePhotoId);
@@ -80,6 +84,8 @@ function Profile( {username, setUsername} ) {
             alert("Photo Saved!")
             authInfo.photoURL = photoURLFromStorage
            setProfilePhotoURL(photoURLFromStorage)
+    }}catch(error){
+        console.log(error)
     }}
 
     const changePassword = (e) => {

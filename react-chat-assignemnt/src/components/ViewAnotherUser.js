@@ -19,15 +19,19 @@ function ViewAnotherUser() {
 
 
     useEffect(async() => {
+        try{
         const docRef = doc(db, "users", `${viewedUserID}`);
         const docSnap = await getDoc(docRef);
         const usersProfile = docSnap.data()
         setViewedProfileUsername(usersProfile.username)
             setViewedProfileURL(usersProfile.photoURL)
-        }
+        }catch(error){
+            console.log(error)
+        }}
        ,[]) 
 
        const followUser = async(userID) => {
+        try{
         authInfo.followingID.push(userID)
         const followingRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(followingRef, {
@@ -44,9 +48,12 @@ function ViewAnotherUser() {
         setMyFollowing([...myFollowing, userDisplayInfo])
 
       setFollowStatus(true)
-    }
+    }catch(error){
+        console.log(error)
+    }}
 
     const unfollowUser = async(userID) => {
+        try{
         authInfo.followingID.filter(followingID => followingID !== `${userID}`)
         const unfollowRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(unfollowRef, {
@@ -59,9 +66,10 @@ function ViewAnotherUser() {
         const removeFollowerList = myFollowing
         const newFollowingList = removeFollowerList.filter(user => user.userID !== userID)
         setMyFollowing(newFollowingList)
-        setFollowStatus(false) 
-        
-    }
+        setFollowStatus(false)    
+    }catch(error){
+        console.log(error)
+    }}
     
     
     return (    

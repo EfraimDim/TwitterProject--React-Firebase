@@ -13,6 +13,7 @@ function DisplayTweet({tweet, reRenderFunction}) {
  
 
     const likeTweet = async(tweet) => {
+        try{
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
         const userRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(tweetRef, {
@@ -20,14 +21,15 @@ function DisplayTweet({tweet, reRenderFunction}) {
     }) 
         await updateDoc(userRef, {
             likedTweets: arrayUnion(`${tweet.id}`)
-})
-if(reRenderFunction){
-    reRenderFunction()
-} 
-
-};
+    })
+        if(reRenderFunction){
+        reRenderFunction()
+        }}catch(error){
+        console.log(error)
+    }};
 
     const unlikeTweet = async(tweet) => {
+        try{
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
         const userRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(tweetRef, {
@@ -37,7 +39,9 @@ if(reRenderFunction){
             likedTweets: arrayRemove(`${tweet.id}`)
     })
     if(reRenderFunction) reRenderFunction()
-    };
+        }catch(error){
+    console.log(error)
+        }};
 
     const viewUserProfile = (userID) => {
         setViewedUserID(`${userID}`) 

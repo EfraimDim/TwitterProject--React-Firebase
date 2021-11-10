@@ -27,6 +27,9 @@ function App() {
   const [tweetSearch, setTweetSearch] = useState('')
   const [userSearch, setUserSearch] = useState('')
   const [myFollowing, setMyFollowing] = useState([])
+  const [usersTweetList, setUsersTweetList] = useState([])
+  const [viewUsersTweets, setViewUsersTweets] = useState(false)
+  const [viewUsersUsername, setViewUsersUsername] = useState('')
 
 
   const auth = getAuth();
@@ -35,6 +38,7 @@ function App() {
 
   useEffect(() => {
     onAuthStateChanged(auth, async(user) => {
+      try{
       if (user){ 
         const {uid} = user
         const docRef = doc(db, "users", `${uid}`);
@@ -52,17 +56,18 @@ function App() {
              setMyFollowing([...myFollowersList])  
         })
         setIsauthfinished(true) }
-};
-  })},[])
+}}catch(error){
+    console.log(error)
+}})
+},[])
 
  
-
-  
-
   const logout = () => {
     signOut(auth).then(() => {
       alert("Logout Success!")
       setAuthInfo(null)
+      setIsSignUp(false)
+      setViewUsersTweets(false)
     }).catch((error) => {
       console.log(error)
       alert(`${error}`)
@@ -93,6 +98,8 @@ function App() {
   }
 
   const searchTweet = async() => {
+    try{
+      setViewUsersTweets(false)
     if(tweetSearch === ''){
       return
     }else{
@@ -103,9 +110,13 @@ function App() {
       searchedTweets.push({ id: document.id, ...document.data()})
     })
     setSearchedTweetList(searchedTweets)
-  }}
+  }}catch(error){
+    console.log(error)
+}}
 
   const searchUser = async() => {
+    try{
+      setViewUsersTweets(false)
     if(userSearch === ''){
       return
     }else{
@@ -116,7 +127,9 @@ function App() {
       searchedUserTweets.push({ id: document.id, ...document.data()})
     })
     setSearchedTweetList(searchedUserTweets)
-  }}
+  }}catch(error){
+    console.log(error)
+}}
 
   const changeSearch = () => {
     setIsUserSearch(!isUserSearch)
@@ -124,6 +137,7 @@ function App() {
 
  
   const displayLikedTweets = async() => {
+    try{
     const likedTweets = []
     const docRef = doc(db, "users", `${authInfo.userID}`);
     const docSnap = await getDoc(docRef);
@@ -136,8 +150,11 @@ function App() {
                 likedTweets.push(tweet)
                 setLikedTweetsList([...likedTweets])
               })}
-      setShowLikedTweets(true)
-              } 
+        setShowLikedTweets(true)
+        setViewUsersTweets(false)
+    }catch(error){
+      console.log(error)
+  } } 
             
 
     const displayAllTweets = () => {
@@ -147,6 +164,9 @@ function App() {
     
     const returnToTweets = () => {
       setViewAnotherUser(false)
+    }
+    const showAllTweetsButton = () => {
+    setYourTweetListSelected(true)
     }
   
 
@@ -184,7 +204,13 @@ function App() {
         viewedUserID,
         setViewedUserID,
         myFollowing,
-        setMyFollowing
+        setMyFollowing,
+        usersTweetList,
+        setUsersTweetList,
+        viewUsersTweets,
+        setViewUsersTweets,
+        viewUsersUsername,
+        setViewUsersUsername
       }}>
        {authInfo && viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={returnToTweets} className={styles.home }> 
@@ -208,7 +234,7 @@ function App() {
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
         <Link to="/searchTweets"><div className={styles.search} onClick={searchTweet}>Search Tweets</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
         {showLikedTweets ? <Link to="/"><div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div></Link> : <Link to="/likedTweets"><div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div> </Link>}
-        <Link to="/whoImFollowing"><div className={styles.search}>Following</div></Link>
+        <Link to="/whoImFollowing"><div onClick={showAllTweetsButton} className={styles.search}>Following</div></Link>
         <div onClick={logout} className={styles.signOut}>
         Sign Out
          </div>
