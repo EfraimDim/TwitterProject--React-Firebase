@@ -113,7 +113,7 @@ function Profile( {username, setUsername} ) {
                 <img className={styles.image} src={profilePhotoURL}/>
                 <form onSubmit={uploadNewPhoto} className={styles.form}>
                 <label className={styles.username}>Change Profile Photo:</label>
-                <input className={styles.file} type="file" required ref={fileInputRef} />
+                <input className={styles.file} type="file" accept="image/png, image/gif, image/jpeg" required ref={fileInputRef} />
                 <button className={styles.submit} type="submit">Upload!</button>
                 </form>
                 <form onSubmit={saveUsername} className={styles.form}>
@@ -125,7 +125,7 @@ function Profile( {username, setUsername} ) {
                         <label className={styles.username}>Change Password:</label>
                         <input className={styles.input} type="password" value={newPassword} onChange={handleNewPassowrd} placeholder="enter new password" />
                         <label className={styles.username}>Repeat Password:</label>
-                        <input className={styles.input} type="password" value={rePassword} onChange={handleRePassowrd} placeholder="repeat new username" />
+                        <input className={styles.input}  type="password" value={rePassword} onChange={handleRePassowrd} placeholder="repeat new username" />
                         <button className={styles.submit} type="submit">Save</button>
                 </form>}
             </div>

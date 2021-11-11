@@ -55,8 +55,9 @@ function App() {
              myFollowersList.push(userDisplayInfo)
              setMyFollowing([...myFollowersList])  
         })
-        setIsauthfinished(true) }
-}}catch(error){
+       } 
+}setIsauthfinished(true) 
+}catch(error){
     console.log(error)
 }})
 },[])
@@ -253,7 +254,7 @@ function App() {
       </AuthContext.Provider>
     </div>
      : 
-     <div>
+     <div className={styles.loading}>
        Loading...
      </div>}
      </>

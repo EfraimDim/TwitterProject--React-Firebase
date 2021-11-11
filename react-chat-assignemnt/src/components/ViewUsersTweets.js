@@ -11,7 +11,7 @@ function ViewUsersTweets() {
 
 
     return <div >
-                <h1 className={styles.header}>{viewUsersUsername} Tweets:</h1>
+                <h1 className={styles.header}>{viewUsersUsername}'s Tweets:</h1>
                 <div className={styles.div}> {usersTweetList.map((tweet, index) => { return   (
                         <div className={styles.tweetHolder} key={index}>
                                <DisplayTweet tweet= {tweet} />

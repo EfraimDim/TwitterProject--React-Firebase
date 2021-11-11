@@ -13,6 +13,7 @@ export default function Login() {
     const [usernameSignUp, setUsername] = useState('')
     const [emailSignUp, setEmailSignUp] = useState('')
     const [passwordSignUp, setPasswordSignUp] = useState('')
+    const [rePasswordSignUp, setRePasswordSignUp] = useState('')
     const [emailLogin, setEmailLogin] = useState('')
     const [passwordLogin, setPasswordLogin] = useState('')
     
@@ -25,7 +26,7 @@ export default function Login() {
 
 
 
-      const handleUsernameSignUp = (e) => {
+    const handleUsernameSignUp = (e) => {
         setUsername(e.target.value)
     }
  
@@ -35,7 +36,11 @@ export default function Login() {
     const handlePasswordSignUp = (e) => {
     setPasswordSignUp(e.target.value)
 }
-const handleEmailLogin = (e) => {
+    const handleRePasswordSignUp = (e) => {
+    setRePasswordSignUp(e.target.value)
+    }
+
+    const handleEmailLogin = (e) => {
     setEmailLogin(e.target.value)
 }
     const handlePasswordLogin = (e) => {
@@ -50,6 +55,7 @@ const handleEmailLogin = (e) => {
     const handleSignUp = async(e) => {
         e.preventDefault();
         try{
+        if(passwordSignUp === rePasswordSignUp){
         const photoToUpload = fileInputRef.current.files[0]
         const uniquePhotoId = `id${photoToUpload.name}` + Math.random().toString(16).slice(2)
         const storageRef = ref(storage, uniquePhotoId);
@@ -65,7 +71,9 @@ const handleEmailLogin = (e) => {
             userInfo
           );
         login(userInfo)
-        }}
+        }}}else{
+            alert("passwords didn't match!")
+        }
     }catch(error) {
         console.log(error)
         alert(`${error}`)
@@ -128,8 +136,10 @@ const handleEmailLogin = (e) => {
         <input className={styles.input} required type="text" value={emailSignUp} onChange={handleEmailSignUp} placeholder="enter email" />
         <label className={styles.label}>Password</label>
         <input className={styles.input} required type="password" value={passwordSignUp} onChange={handlePasswordSignUp} placeholder="enter password" />
+        <label className={styles.label}>Re Password</label>
+        <input className={styles.input} required type="password" value={rePasswordSignUp} onChange={handleRePasswordSignUp} placeholder="repeat password" />
         <label className={styles.label}>Profile Picture</label>
-        <input type="file" required ref={fileInputRef} />
+        <input type="file" accept="image/png, image/gif, image/jpeg" required ref={fileInputRef} />
         <button type='submit' className={styles.submit}>Sign Up</button>
         </form>
         </div>}
