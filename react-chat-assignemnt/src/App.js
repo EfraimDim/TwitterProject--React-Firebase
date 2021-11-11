@@ -23,18 +23,22 @@ function App() {
   const [likedTweetsList, setLikedTweetsList] = useState([])
   const [isauthfinished, setIsauthfinished] = useState(false)
   const [isHome, setIsHome] = useState(true)
+  const [isHomeNav, setIsHomeNav] = useState(true)
   const [isSignUp, setIsSignUp] = useState(false)
   const [tweetSearch, setTweetSearch] = useState('')
   const [userSearch, setUserSearch] = useState('')
   const [myFollowing, setMyFollowing] = useState([])
+  const [myFollowers, setMyFollowers] = useState([])
   const [usersTweetList, setUsersTweetList] = useState([])
   const [viewUsersTweets, setViewUsersTweets] = useState(false)
   const [viewUsersUsername, setViewUsersUsername] = useState('')
+  const [isMyFollowersPage, setIsMyFollowersPage] = useState(false)
 
 
   const auth = getAuth();
   const firebase = useContext(FirebaseContext)
   const db = getFirestore(firebase)
+ 
 
   useEffect(() => {
     onAuthStateChanged(auth, async(user) => {
@@ -43,6 +47,7 @@ function App() {
         const {uid} = user
         const docRef = doc(db, "users", `${uid}`);
         const docSnap = await getDoc(docRef);
+        const myFollowingList = []
         const myFollowersList = []
         if (docSnap.exists()) {
             setAuthInfo(docSnap.data());
@@ -51,11 +56,21 @@ function App() {
              const docRefFollowing = doc(db, "users", `${userID}`);
              const docSnap = await getDoc(docRefFollowing);
              const user = docSnap.data()
-             const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username}
-             myFollowersList.push(userDisplayInfo)
-             setMyFollowing([...myFollowersList])  
+             const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username, following: user.followingID.length, followers: user.followerID.length}
+             myFollowingList.push(userDisplayInfo)
+             setMyFollowing([...myFollowingList])    
         })
-       } 
+        const myFollowers = docSnap.data().followerID
+        console.log(docSnap.data())
+        if(myFollowers.length !== 0){
+        myFollowers.forEach(async(userID) => {
+          const docRefFollowing = doc(db, "users", `${userID}`);
+          const docSnap = await getDoc(docRefFollowing);
+          const user = docSnap.data()
+          const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username, following: user.followingID.length, followers: user.followerID.length}
+          myFollowersList.push(userDisplayInfo)
+          setMyFollowers([...myFollowersList])
+       })}} 
 }setIsauthfinished(true) 
 }catch(error){
     console.log(error)
@@ -76,11 +91,11 @@ function App() {
   }
 
   const navHome = () => {
-    setIsHome(true)
+    setIsHomeNav(true)
   }
 
   const navProfile = () => {
-    setIsHome(false)
+    setIsHomeNav(false)
   }
 
   const navSignUp = () => {
@@ -206,12 +221,15 @@ function App() {
         setViewedUserID,
         myFollowing,
         setMyFollowing,
+        myFollowers,
+        setMyFollowers,
         usersTweetList,
         setUsersTweetList,
         viewUsersTweets,
         setViewUsersTweets,
         viewUsersUsername,
-        setViewUsersUsername
+        setViewUsersUsername,
+        isMyFollowersPage
       }}>
        {authInfo && viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={returnToTweets} className={styles.home }> 
@@ -222,12 +240,12 @@ function App() {
          </div> */}
          </nav>} 
        {authInfo && !viewAnotherUser && <nav className={styles.navBar}>
-        <div onClick={navHome} className={isHome ? styles.home : styles.homeUnselected}> 
+        <Link onClick={navHome} to="/"> <div  className={isHomeNav ? styles.home : styles.homeUnselected}> 
         Home
-       </div>
-        <div onClick={navProfile} className={isHome ? styles.profileUnselected : styles.profile}>
+       </div></Link>
+        <Link onClick={navProfile} to="/profile"><div  className={isHomeNav ? styles.profileUnselected : styles.profile}>
         Profile
-        </div>
+        </div></Link>
         {isUserSearch ? 
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={userSearch} onChange={handleUserSearch} placeholder="search user"/>
         <Link to="/searchTweets" ><div className={styles.search} onClick={searchUser}>Search Users</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to tweet search</div></div>
@@ -235,7 +253,8 @@ function App() {
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
         <Link to="/searchTweets"><div className={styles.search} onClick={searchTweet}>Search Tweets</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
         {showLikedTweets ? <Link to="/"><div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div></Link> : <Link to="/likedTweets"><div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div> </Link>}
-        <Link to="/whoImFollowing"><div onClick={showAllTweetsButton} className={styles.search}>Following</div></Link>
+        <Link to="/whoImFollowing"><div onClick={showAllTweetsButton} onClick={() => setIsMyFollowersPage(false)} className={styles.searchChange}>Following</div></Link>
+        <Link to="/myFollowers"><div onClick={showAllTweetsButton} onClick={() => setIsMyFollowersPage(true)} className={styles.search}>Followers</div></Link>
         <div onClick={logout} className={styles.signOut}>
         Sign Out
          </div>

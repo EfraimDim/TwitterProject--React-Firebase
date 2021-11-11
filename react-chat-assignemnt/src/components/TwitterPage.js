@@ -7,7 +7,7 @@ import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, startAfte
 import { FirebaseContext } from "../utils/Firebase"
 import { AuthContext } from "./AuthContext"
 import { getAuth } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ViewAnotherUser from "./ViewAnotherUser" 
 
 
@@ -33,7 +33,7 @@ const { authInfo, viewAnotherUser, viewUsersTweets } = useContext(AuthContext);
 
 
   const {  isHome, tweetList, setTweetList, yourTweetListSelected, setYourTweetListSelected, setViewUsersTweets } = useContext(AuthContext);
-
+  const location = useLocation()
 // the two next useEffect make it so that when a new tweet is added, the scroll position doesnt go back to the first 10,
 //it stays where you were scrolled to :)
 
@@ -132,18 +132,19 @@ const returnToFollowers = () => {
   return (
     <div>
       {viewAnotherUser ? <ViewAnotherUser/> : <>
-      <div>
+      {location.pathname === "/profile" ?<></> :<>
+      <div className={styles.buttonWrapper}>
         {viewUsersTweets ? <div  onClick={returnToFollowers}  className={styles.yourListSelected}>Return</div> : <>
          {yourTweetListSelected  ?
          <Link to="/">
           <div  onClick={viewAllTweets}  className={styles.yourListSelected}>All Tweets</div></Link> : 
           <Link to="/myTweets">
             <div onClick={viewYourTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}</>}
-            </div>
+            </div></>}
       <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets }}>
-      {isHome &&  <Home/>}
+      {<Home username = {username} setUsername = {setUsername}/>}
      </Tweets.Provider>
-      {!isHome && <Profile username = {username} setUsername = {setUsername} />}</>}
+      </>}
     </div>
   );
 }

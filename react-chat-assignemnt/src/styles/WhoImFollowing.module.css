@@ -1,5 +1,5 @@
 .header{
-    width: 103px;
+    width: fit-content;
     height: 42px;
     /* font-family: Roboto; */
     font-family: sans-serif;
@@ -60,4 +60,19 @@
     height:200px;
     width:200px;
     border-radius: 50%;
+}
+.stats{
+    margin-left: 40px;
+    height: fit-content;
+    width: 200px;
+    /* font-family: Roboto; */
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 30px;
+    color: white;
+    align-self: center;
+     
+}
+.statsWrapper{
+    align-self: center;
 }

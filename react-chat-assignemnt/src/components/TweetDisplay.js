@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { getFirestore, updateDoc, arrayUnion, arrayRemove, doc, getDoc} from "firebase/firestore"
+import { getFirestore, updateDoc, arrayUnion, arrayRemove, doc } from "firebase/firestore"
 import { FirebaseContext } from "../utils/Firebase"
 import {AuthContext} from "./AuthContext"
 import styles from "../styles/Home.module.css"
@@ -16,11 +16,7 @@ function DisplayTweet({tweet, reRenderFunction}) {
         try{
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
         const userRef = doc(db, "users", `${authInfo.userID}`);
-        // const docSnapTweet = await getDoc(tweetRef);
-        // const fullTweet = {id:docSnapTweet.id, ...docSnapTweet.data()}
-        // const docSnapUser = await getDoc(userRef);
-        // const fullUser = {id:docSnapUser.id, ...docSnapUser.data()}
-      
+  
         await updateDoc(tweetRef, {
         likersID: arrayUnion(`${authInfo.userID}`)
     }) 

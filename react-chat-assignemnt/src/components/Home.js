@@ -6,12 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from "./AuthContext"
 import { Routes, Route, useLocation } from "react-router-dom";
 import DisplayTweet from "./TweetDisplay"
-import WhoImFollowing from "./WhoImFollowing" 
+import Following from "./WhoImFollowing" 
 import ViewUsersTweets from "./ViewUsersTweets"
+import Profile from "./Profile"
 
 
 
-function Home() {
+function Home({username, setUsername}) {
 
     const [tweet, setTweet] = useState('')
     const [isDisabled, setIsDisabled] = useState(true)
@@ -19,7 +20,7 @@ function Home() {
    
 
     const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets } = useContext(Tweets);
-    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, setYourTweetListSelected, isUserSearch, searchUser, searchTweet, myFollowing, viewUsersTweets} = useContext(AuthContext)
+    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, setYourTweetListSelected, isUserSearch, searchUser, searchTweet, myFollowing, myFollowers, viewUsersTweets} = useContext(AuthContext)
 
     const location = useLocation()
     
@@ -65,8 +66,10 @@ function Home() {
    
     
     return <div>
-                <Routes>    
-               <Route path="/whoImFollowing" element={<>{viewUsersTweets ? <ViewUsersTweets/> :<WhoImFollowing myFollowing={myFollowing} />}</>}></Route>
+                <Routes>   
+            <Route path="/profile" element={<Profile username = {username} setUsername = {setUsername}/>}></Route> 
+               <Route path="/whoImFollowing" element={<>{viewUsersTweets ? <ViewUsersTweets/> :<Following myFollowing={myFollowing} />}</>}></Route>
+               <Route path="/myFollowers" element={<>{viewUsersTweets ? <ViewUsersTweets/> :<Following myFollowing={myFollowers} />}</>}></Route>
                 <Route path="/likedTweets" element={<div className={styles.div}> {likedTweetsList.map((tweet, index) => { return   (
                         <div className={styles.tweetHolder} key={index}>
                                <DisplayTweet tweet= {tweet} reRenderFunction= {displayLikedTweets}/>

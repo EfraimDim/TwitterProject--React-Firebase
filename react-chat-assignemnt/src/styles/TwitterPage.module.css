@@ -57,6 +57,10 @@ body{
     cursor: pointer;
     border-radius: 10px;
 }
+.buttonWrapper{
+    height: fit-content;
+    width: fit-content;
+}
 
 .yourListUnselected {
   

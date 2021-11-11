@@ -66,7 +66,7 @@ export default function Login() {
                 const starsRef = ref(storage, `${uniquePhotoId}`);
                 const photoURLFromStorage = await getDownloadURL(starsRef)
             alert(`Account Created ${usernameSignUp}`)
-            const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: photoURLFromStorage, googleAccount: false, likedTweets: [], followersID: [], followingID: []}
+            const userInfo = {email: emailSignUp, userID: createAccount.user.uid, username: usernameSignUp, photoURL: photoURLFromStorage, googleAccount: false, likedTweets: [], followerID: [], followingID: []}
             const docRef = await setDoc(doc(db, "users", `${createAccount.user.uid}`), 
             userInfo
           );
@@ -111,7 +111,7 @@ export default function Login() {
                     login(docSnap.data());
                 } else {
                 const {displayName, email, photoURL, uid} = googleSignIn.user
-                const userInfo = {email: email, userID: uid, username: displayName, photoURL: photoURL, googleAccount: true, likedTweets: [], followersID: [], followingID: [] }
+                const userInfo = {email: email, userID: uid, username: displayName, photoURL: photoURL, googleAccount: true, likedTweets: [], followerID: [], followingID: [] }
                 const docRef = await setDoc(doc(db, "users", `${uid}`), 
                     userInfo
                   );

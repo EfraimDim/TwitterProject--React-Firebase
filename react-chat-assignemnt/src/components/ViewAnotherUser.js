@@ -9,6 +9,8 @@ function ViewAnotherUser() {
 
     const [viewedProfileURL, setViewedProfileURL] = useState('')
     const [viewedProfileUsername, setViewedProfileUsername] = useState('')
+    const [viewdFollowersStats, setViewedFollowersStats] = useState('')
+    const [viewFollowedStats, setViewFollowedStats] = useState('')
   
 
     const { viewedUserID, authInfo, myFollowing, setMyFollowing  } = useContext(AuthContext);
@@ -24,7 +26,9 @@ function ViewAnotherUser() {
         const docSnap = await getDoc(docRef);
         const usersProfile = docSnap.data()
         setViewedProfileUsername(usersProfile.username)
-            setViewedProfileURL(usersProfile.photoURL)
+        setViewedProfileURL(usersProfile.photoURL)
+        setViewFollowedStats(usersProfile.followerID.length)
+        setViewedFollowersStats(usersProfile.followingID.length)
         }catch(error){
             console.log(error)
         }}
@@ -33,6 +37,8 @@ function ViewAnotherUser() {
        const followUser = async(userID) => {
         try{
         authInfo.followingID.push(userID)
+        setViewFollowedStats(viewFollowedStats+1)
+
         const followingRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(followingRef, {
         followingID: arrayUnion(`${userID}`)
@@ -44,7 +50,7 @@ function ViewAnotherUser() {
     })  
         const docSnap = await getDoc(followerRef);
         const user = docSnap.data()
-        const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username}
+        const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username, followers: user.followerID.length, following: user.followingID.length}
         setMyFollowing([...myFollowing, userDisplayInfo])
 
       setFollowStatus(true)
@@ -54,6 +60,7 @@ function ViewAnotherUser() {
 
     const unfollowUser = async(userID) => {
         try{
+        setViewFollowedStats(viewFollowedStats-1)
         authInfo.followingID.filter(followingID => followingID !== `${userID}`)
         const unfollowRef = doc(db, "users", `${authInfo.userID}`);
         await updateDoc(unfollowRef, {
@@ -76,9 +83,15 @@ function ViewAnotherUser() {
     
     <div className={styles.wrapper}>
         <h1 className={styles.profile}>User Profile:</h1>
+        <div className={styles.userWrapper}>
         <img className={styles.image} src={viewedProfileURL}/>
+        <div className={styles.textWrapper}>
                 <label className={styles.username}>User Name:</label>
-                <label className={styles.input}>{viewedProfileUsername}</label>
+                <label className={styles.input}>{viewedProfileUsername}</label><br></br>
+                <label className={styles.username}>Stats:</label>
+                <label className={styles.input}>Followers: {viewFollowedStats} Following: {viewdFollowersStats}</label>
+                </div>
+                </div>
                 {viewedUserID === authInfo.userID ? <></> :
                      <>{followStatus ? 
                     <div className={styles.following} onClick={() => unfollowUser(viewedUserID)} >Unfollow</div> 
