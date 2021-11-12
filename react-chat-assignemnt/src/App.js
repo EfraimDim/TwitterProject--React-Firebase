@@ -16,6 +16,7 @@ function App() {
   const [tweetList, setTweetList] = useState([])
   const [searchedTweetList, setSearchedTweetList] = useState([])
   const [yourTweetListSelected, setYourTweetListSelected] = useState(false)
+  const [yourTweetList, setYourTweetList] = useState([])
   const [viewAnotherUser, setViewAnotherUser] = useState(false)
   const [viewedUserID, setViewedUserID] = useState('')
   const [isUserSearch, setIsUserSearch] = useState(false)
@@ -38,6 +39,40 @@ function App() {
   const auth = getAuth();
   const firebase = useContext(FirebaseContext)
   const db = getFirestore(firebase)
+
+  const displayLikedTweets = async(uid) => {
+    try{
+    const likedTweets = []
+    const docRef = doc(db, "users", `${uid}`);
+    const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              const likedTweetsID = docSnap.data().likedTweets
+              likedTweetsID.forEach(async(tweetID)=>{
+                const tweetRef = doc(db, "tweets", `${tweetID}`);
+                const docSnap = await getDoc(tweetRef)
+                const tweet = { id:docSnap.id, ...docSnap.data()}
+                likedTweets.push(tweet)
+                setLikedTweetsList([...likedTweets])
+              })}
+       
+    }catch(error){
+      console.log(error)
+  } } 
+
+  const viewYourTweets = async(uid) => { 
+    try{
+    const yourTweets = []
+    console.log("run")
+    const q = query(collection(db, "tweets"), where("userID", "==", `${uid}`), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((document) => {
+      yourTweets.push({ id:document.id, ...document.data()})  
+  });
+    setYourTweetList(yourTweets)
+    
+  }catch(error){
+    console.log(error)
+}}
  
 
   useEffect(() => {
@@ -50,6 +85,8 @@ function App() {
         const myFollowingList = []
         const myFollowersList = []
         if (docSnap.exists()) {
+          viewYourTweets(uid)
+          displayLikedTweets(uid)
             setAuthInfo(docSnap.data());
             const followingList = docSnap.data().followingID
             followingList.forEach(async(userID) => {
@@ -61,7 +98,6 @@ function App() {
              setMyFollowing([...myFollowingList])    
         })
         const myFollowers = docSnap.data().followerID
-        console.log(docSnap.data())
         if(myFollowers.length !== 0){
         myFollowers.forEach(async(userID) => {
           const docRefFollowing = doc(db, "users", `${userID}`);
@@ -151,30 +187,7 @@ function App() {
     setIsUserSearch(!isUserSearch)
   }
 
- 
-  const displayLikedTweets = async() => {
-    try{
-    const likedTweets = []
-    const docRef = doc(db, "users", `${authInfo.userID}`);
-    const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              const likedTweetsID = docSnap.data().likedTweets
-              likedTweetsID.forEach(async(tweetID)=>{
-                const tweetRef = doc(db, "tweets", `${tweetID}`);
-                const docSnap = await getDoc(tweetRef)
-                const tweet = { id:docSnap.id, ...docSnap.data()}
-                likedTweets.push(tweet)
-                setLikedTweetsList([...likedTweets])
-              })}
-        setShowLikedTweets(true)
-        setViewUsersTweets(false)
-    }catch(error){
-      console.log(error)
-  } } 
-            
-
     const displayAllTweets = () => {
-          setLikedTweetsList([])
           setShowLikedTweets(false)
             }
     
@@ -208,10 +221,11 @@ function App() {
         searchedTweetList,
         yourTweetListSelected,
         setYourTweetListSelected,
+        yourTweetList,
+        setYourTweetList,
         likedTweetsList,
         showLikedTweets,
         setShowLikedTweets,
-        displayLikedTweets,
         isUserSearch,
         searchUser,
         searchTweet,
@@ -229,7 +243,11 @@ function App() {
         setViewUsersTweets,
         viewUsersUsername,
         setViewUsersUsername,
-        isMyFollowersPage
+        isMyFollowersPage,
+        viewYourTweets,
+        setLikedTweetsList,
+        likedTweetsList
+        
       }}>
        {authInfo && viewAnotherUser && <nav className={styles.navBar}>
         <div onClick={returnToTweets} className={styles.home }> 
@@ -252,7 +270,7 @@ function App() {
          :
         <div className={styles.searchWrapper}><input className={styles.input} type="text" value={tweetSearch} onChange={handleTweetSearch} placeholder="search tweet"/>
         <Link to="/searchTweets"><div className={styles.search} onClick={searchTweet}>Search Tweets</div></Link><div className={styles.searchChange} onClick={changeSearch}>change to user search</div></div>}
-        {showLikedTweets ? <Link to="/"><div className={styles.searchChange} onClick={displayAllTweets}>All Tweets</div></Link> : <Link to="/likedTweets"><div className={styles.searchChange} onClick={displayLikedTweets}>Liked Tweets</div> </Link>}
+        {showLikedTweets ? <Link  onClick={displayAllTweets} to="/"><div className={styles.searchChange}>All Tweets</div></Link> : <Link onClick={() => setShowLikedTweets(true)} to="/likedTweets"><div className={styles.searchChange} >Liked Tweets</div> </Link>}
         <Link to="/whoImFollowing"><div onClick={showAllTweetsButton} onClick={() => setIsMyFollowersPage(false)} className={styles.searchChange}>Following</div></Link>
         <Link to="/myFollowers"><div onClick={showAllTweetsButton} onClick={() => setIsMyFollowersPage(true)} className={styles.search}>Followers</div></Link>
         <div onClick={logout} className={styles.signOut}>

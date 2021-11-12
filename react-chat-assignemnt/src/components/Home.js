@@ -19,17 +19,17 @@ function Home({username, setUsername}) {
 
    
 
-    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList, viewYourTweets } = useContext(Tweets);
-    const { tweetList,  searchedTweetList, likedTweetsList, yourTweetListSelected, displayLikedTweets, setYourTweetListSelected, isUserSearch, searchUser, searchTweet, myFollowing, myFollowers, viewUsersTweets} = useContext(AuthContext)
+    const { addTweet, loading, loadMoreTweets, tenthTweet, yourTweetList} = useContext(Tweets);
+    const { tweetList, setLikedTweetsList, likedTweetsList,  searchedTweetList,  yourTweetListSelected, setShowLikedTweets, setViewUsersTweets, setYourTweetListSelected, isUserSearch, searchUser, searchTweet, myFollowing, myFollowers, viewUsersTweets, viewYourTweets, setYourTweetList } = useContext(AuthContext)
 
     const location = useLocation()
     
     useEffect(() => {
-    if(location.pathname === "/myTweets"){
-        viewYourTweets()
-    }
+    if(location.pathname === "/myTweets")
+    setYourTweetListSelected(true)
     if(location.pathname === "/likedTweets")
-        displayLikedTweets()
+    setShowLikedTweets(true)
+    setViewUsersTweets(false)
     if(location.pathname === "/whoImFollowing")
     setYourTweetListSelected(true)
     },[])
@@ -72,18 +72,18 @@ function Home({username, setUsername}) {
                <Route path="/myFollowers" element={<>{viewUsersTweets ? <ViewUsersTweets/> :<Following myFollowing={myFollowers} />}</>}></Route>
                 <Route path="/likedTweets" element={<div className={styles.div}> {likedTweetsList.map((tweet, index) => { return   (
                         <div className={styles.tweetHolder} key={index}>
-                               <DisplayTweet tweet= {tweet} reRenderFunction= {displayLikedTweets}/>
+                               <DisplayTweet viewingLikedTweets={true} tweet= {tweet} index={index} setTweetList={setLikedTweetsList} tweetList={likedTweetsList} likedTweetsList={likedTweetsList} setLikedTweetsList={setLikedTweetsList}/>
                             </div>)})}</div>}/>
                 <Route path="/searchTweets" element={<> {searchedTweetList.map((tweet, index) => { return   (
                             <div className={styles.tweetHolder} key={index}>
-                               <DisplayTweet tweet= {tweet} reRenderFunction={isUserSearch ? searchUser : searchTweet}/> 
+                               <DisplayTweet viewingLikedTweets={false} tweet= {tweet} likedTweetsList={likedTweetsList} setLikedTweetsList={setLikedTweetsList} reRenderFunction={isUserSearch ? searchUser : searchTweet}/> 
                             </div>
                             )})}</>}/>
                  
                 <Route path="/myTweets" element={<div> {yourTweetList.map((tweet, index) => {  
                     return   (
                             <div className={styles.tweetHolder} style={yourTweetListSelected ? {background:"rgba(240, 250, 250, 0.2)"} : {}} key={index}>
-                            <DisplayTweet tweet= {tweet} reRenderFunction= {viewYourTweets}/>
+                            <DisplayTweet  tweet= {tweet} index={index} setTweetList={setYourTweetList} tweetList={yourTweetList} likedTweetsList={likedTweetsList} setLikedTweetsList={setLikedTweetsList} viewingLikedTweets={false}/>
                             </div>
                             )})}</div>}/>
                  <Route path="/" element={
@@ -100,7 +100,7 @@ function Home({username, setUsername}) {
                       
                         return   (
                             <div className={styles.tweetHolder} key={index}>
-                                <DisplayTweet tweet= {tweet}/>
+                                <DisplayTweet tweet= {tweet} likedTweetsList={likedTweetsList} setLikedTweetsList={setLikedTweetsList} viewingLikedTweets={false}/>
                             </div>
                             )})}
                 </div>

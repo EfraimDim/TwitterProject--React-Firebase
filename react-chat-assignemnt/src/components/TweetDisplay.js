@@ -5,18 +5,23 @@ import {AuthContext} from "./AuthContext"
 import styles from "../styles/Home.module.css"
 
 
-function DisplayTweet({tweet, reRenderFunction}) {
+function DisplayTweet({tweet,  setTweetList, tweetList, index, reRenderFunction, setLikedTweetsList, likedTweetsList, viewingLikedTweets}) {
 
     const firebase = useContext(FirebaseContext)
     const db = getFirestore(firebase)
     const { authInfo, setViewAnotherUser, setViewedUserID  } = useContext(AuthContext);
  
 
-    const likeTweet = async(tweet) => {
+    const likeTweet = async(tweet, index) => {
         try{
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
         const userRef = doc(db, "users", `${authInfo.userID}`);
-  
+        if(tweetList){
+        tweet.likersID.push(`${authInfo.userID}`)
+        tweetList[index] = tweet
+        setTweetList(tweetList)
+        }
+        setLikedTweetsList([tweet, ...likedTweetsList])
         await updateDoc(tweetRef, {
         likersID: arrayUnion(`${authInfo.userID}`)
     }) 
@@ -25,7 +30,8 @@ function DisplayTweet({tweet, reRenderFunction}) {
     })
         if(reRenderFunction){
         reRenderFunction()
-        }}catch(error){
+        }
+    }catch(error){
         console.log(error)
     }};
 
@@ -39,7 +45,17 @@ function DisplayTweet({tweet, reRenderFunction}) {
         await updateDoc(userRef, {
             likedTweets: arrayRemove(`${tweet.id}`)
     })
-    if(reRenderFunction) reRenderFunction()
+    if(tweetList){
+        tweetList[index].likersID = tweet.likersID.filter(e=> e !== authInfo.userID)
+        setTweetList(tweetList)
+    }
+  
+        const newLikedTweetList = likedTweetsList.filter(twe => twe.tweetID !== tweet.tweetID)
+        setLikedTweetsList(newLikedTweetList)
+
+    if(reRenderFunction){
+reRenderFunction()
+    }
         }catch(error){
     console.log(error)
         }};
@@ -67,9 +83,9 @@ function DisplayTweet({tweet, reRenderFunction}) {
                 </div>
                 <div className={styles.usernameDateWrapper}>
                     <div className={styles.tweet}>{tweet.content}</div>
-                    {tweet.likersID.includes(`${authInfo.userID}`) ? 
+                    {viewingLikedTweets ? <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div>  : <>{tweet.likersID.includes(`${authInfo.userID}`) ? 
                     <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div> 
-                    : <div className={styles.likeButton}  onClick={() =>likeTweet(tweet)}>Like</div> }
+                    : <div className={styles.likeButton}  onClick={() =>likeTweet(tweet, index)}>Like</div> }</>}
                 </div>
                 </div>
                 </div>

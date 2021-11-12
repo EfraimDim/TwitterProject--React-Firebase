@@ -21,10 +21,10 @@ const db = getFirestore(firebase)
 const auth = getAuth()
 const user = auth.currentUser
 
-const { authInfo, viewAnotherUser, viewUsersTweets } = useContext(AuthContext);
+const { authInfo, viewAnotherUser, viewUsersTweets, yourTweetList, setYourTweetList } = useContext(AuthContext);
 
   
-  const [yourTweetList, setYourTweetList] = useState([])
+  
 
   const [username, setUsername] = useState(authInfo.username)
   const [loading, setLoading] = useState(false)
@@ -32,7 +32,7 @@ const { authInfo, viewAnotherUser, viewUsersTweets } = useContext(AuthContext);
   const [tenthTweet, setTenthTweet] = useState("");
 
 
-  const {  isHome, tweetList, setTweetList, yourTweetListSelected, setYourTweetListSelected, setViewUsersTweets } = useContext(AuthContext);
+  const { tweetList, setTweetList, yourTweetListSelected, setYourTweetListSelected, setViewUsersTweets } = useContext(AuthContext);
   const location = useLocation()
 // the two next useEffect make it so that when a new tweet is added, the scroll position doesnt go back to the first 10,
 //it stays where you were scrolled to :)
@@ -81,6 +81,7 @@ useEffect(() => {
           userPhotoURL: authInfo.photoURL
         });
       if(docRefTweet.id){
+        setYourTweetList([{ id: docRefTweet.id, username: docSnap.data().username, date: newTweet.date, content: newTweet.content, userID: authInfo.userID, tweetID: newTweet.tweetID, likersID: [], userPhotoURL: authInfo.photoURL}, ...yourTweetList])
         setLoading(false)
       }
     }catch (error) {
@@ -105,22 +106,12 @@ useEffect(() => {
 }}
 
 
-  const viewYourTweets = async() => { 
-    try{
-    const yourTweets = []
-    const q = query(collection(db, "tweets"), where("userID", "==", `${authInfo.userID}`), orderBy("date", "desc"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((document) => {
-      yourTweets.push({ id:document.id, ...document.data()})  
-  });
-    setYourTweetList(yourTweets)
-    setYourTweetListSelected(true)
-  }catch(error){
-    console.log(error)
-}}
 
 const viewAllTweets = () =>{
   setYourTweetListSelected(false)
+}
+const viewMyTweets = () =>{
+  setYourTweetListSelected(true)
 }
 
 const returnToFollowers = () => {
@@ -139,9 +130,9 @@ const returnToFollowers = () => {
          <Link to="/">
           <div  onClick={viewAllTweets}  className={styles.yourListSelected}>All Tweets</div></Link> : 
           <Link to="/myTweets">
-            <div onClick={viewYourTweets} className={styles.yourListUnselected}>My Tweets</div></Link>}</>}
+            <div onClick={viewMyTweets}  className={styles.yourListUnselected}>My Tweets</div></Link>}</>}
             </div></>}
-      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList, viewYourTweets }}>
+      <Tweets.Provider value={{tweetList, addTweet, loading, loadMoreTweets, tenthTweet, yourTweetListSelected, yourTweetList }}>
       {<Home username = {username} setUsername = {setUsername}/>}
      </Tweets.Provider>
       </>}
