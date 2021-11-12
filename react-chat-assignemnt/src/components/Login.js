@@ -16,6 +16,7 @@ export default function Login() {
     const [rePasswordSignUp, setRePasswordSignUp] = useState('')
     const [emailLogin, setEmailLogin] = useState('')
     const [passwordLogin, setPasswordLogin] = useState('')
+    const [accountBeingCreated, setAccountBeingCreated] = useState(false)
     
     const { login, isSignUp  } = useContext(AuthContext);
 
@@ -55,6 +56,7 @@ export default function Login() {
     const handleSignUp = async(e) => {
         e.preventDefault();
         try{
+            setAccountBeingCreated(true)
         if(passwordSignUp === rePasswordSignUp){
         const photoToUpload = fileInputRef.current.files[0]
         const uniquePhotoId = `id${photoToUpload.name}` + Math.random().toString(16).slice(2)
@@ -73,7 +75,9 @@ export default function Login() {
         login(userInfo)
         }}}else{
             alert("passwords didn't match!")
-        }
+        } 
+        setAccountBeingCreated(false)
+
     }catch(error) {
         console.log(error)
         alert(`${error}`)
@@ -127,7 +131,8 @@ export default function Login() {
 
     <div>
        {isSignUp && 
-       <div className={styles.wrapper}>
+       <>
+       {accountBeingCreated ?  <div className={styles.loadSpinner}></div> : <div className={styles.wrapper}>
          <div className={styles.signUpHeader}>Sign Up!</div>  
         <form className={styles.form} onSubmit={handleSignUp}>
         <label className={styles.label}>Username</label>
@@ -142,7 +147,7 @@ export default function Login() {
         <input type="file" accept="image/png, image/gif, image/jpeg" required ref={fileInputRef} />
         <button type='submit' className={styles.submit}>Sign Up</button>
         </form>
-        </div>}
+        </div>}</>}
 
         {!isSignUp &&
         <div>

@@ -52,8 +52,10 @@ function App() {
                 const docSnap = await getDoc(tweetRef)
                 const tweet = { id:docSnap.id, ...docSnap.data()}
                 likedTweets.push(tweet)
-                setLikedTweetsList([...likedTweets])
-              })}
+                
+              })
+              setLikedTweetsList([...likedTweets])
+            }
        
     }catch(error){
       console.log(error)
@@ -62,7 +64,6 @@ function App() {
   const viewYourTweets = async(uid) => { 
     try{
     const yourTweets = []
-    console.log("run")
     const q = query(collection(db, "tweets"), where("userID", "==", `${uid}`), orderBy("date", "desc"));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((document) => {
@@ -95,8 +96,9 @@ function App() {
              const user = docSnap.data()
              const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username, following: user.followingID.length, followers: user.followerID.length}
              myFollowingList.push(userDisplayInfo)
-             setMyFollowing([...myFollowingList])    
+               
         })
+        setMyFollowing([...myFollowingList])  
         const myFollowers = docSnap.data().followerID
         if(myFollowers.length !== 0){
         myFollowers.forEach(async(userID) => {
@@ -105,8 +107,10 @@ function App() {
           const user = docSnap.data()
           const userDisplayInfo = {photoURL: user.photoURL, userID:userID, username:user.username, following: user.followingID.length, followers: user.followerID.length}
           myFollowersList.push(userDisplayInfo)
-          setMyFollowers([...myFollowersList])
-       })}} 
+         
+       })
+       setMyFollowers([...myFollowersList])
+      }} 
 }setIsauthfinished(true) 
 }catch(error){
     console.log(error)
