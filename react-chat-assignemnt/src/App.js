@@ -124,6 +124,10 @@ function App() {
       setAuthInfo(null)
       setIsSignUp(false)
       setViewUsersTweets(false)
+      setMyFollowers([])
+      setMyFollowing([])
+      setLikedTweetsList([])
+      setYourTweetList([])
     }).catch((error) => {
       console.log(error)
       alert(`${error}`)
