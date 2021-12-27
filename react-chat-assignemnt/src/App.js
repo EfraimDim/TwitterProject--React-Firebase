@@ -46,15 +46,15 @@ function App() {
     const docRef = doc(db, "users", `${uid}`);
     const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              const likedTweetsID = docSnap.data().likedTweets
-              likedTweetsID.forEach(async(tweetID)=>{
-                const tweetRef = doc(db, "tweets", `${tweetID}`);
-                const docSnap = await getDoc(tweetRef)
-                const tweet = { id:docSnap.id, ...docSnap.data()}
-                likedTweets.push(tweet)
+                const likedTweetsID = docSnap.data().likedTweets
+                await likedTweetsID.forEach(async(tweetID)=>{
+                  const tweetRef = doc(db, "tweets", `${tweetID}`);
+                  const docSnap = await getDoc(tweetRef)
+                  const tweet = { id:docSnap.id, ...docSnap.data()}
+                  likedTweets.push(tweet)
                 
               })
-              setLikedTweetsList([...likedTweets])
+              setLikedTweetsList(likedTweets)
             }
        
     }catch(error){
@@ -86,11 +86,11 @@ function App() {
         const myFollowingList = []
         const myFollowersList = []
         if (docSnap.exists()) {
-          viewYourTweets(uid)
-          displayLikedTweets(uid)
+            await viewYourTweets(uid)
+            await displayLikedTweets(uid)
             setAuthInfo(docSnap.data());
             const followingList = docSnap.data().followingID
-            followingList.forEach(async(userID) => {
+            await followingList.forEach(async(userID) => {
              const docRefFollowing = doc(db, "users", `${userID}`);
              const docSnap = await getDoc(docRefFollowing);
              const user = docSnap.data()
@@ -98,10 +98,10 @@ function App() {
              myFollowingList.push(userDisplayInfo)
                
         })
-        setMyFollowing([...myFollowingList])  
+        setMyFollowing(myFollowingList)  
         const myFollowers = docSnap.data().followerID
         if(myFollowers.length !== 0){
-        myFollowers.forEach(async(userID) => {
+        await myFollowers.forEach(async(userID) => {
           const docRefFollowing = doc(db, "users", `${userID}`);
           const docSnap = await getDoc(docRefFollowing);
           const user = docSnap.data()
@@ -109,7 +109,7 @@ function App() {
           myFollowersList.push(userDisplayInfo)
          
        })
-       setMyFollowers([...myFollowersList])
+       setMyFollowers(myFollowersList)
       }} 
 }setIsauthfinished(true) 
 }catch(error){

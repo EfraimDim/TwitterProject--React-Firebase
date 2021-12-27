@@ -54,7 +54,7 @@ function DisplayTweet({tweet,  setTweetList, tweetList, index, reRenderFunction,
         setLikedTweetsList(newLikedTweetList)
 
     if(reRenderFunction){
-reRenderFunction()
+        reRenderFunction()
     }
         }catch(error){
     console.log(error)
