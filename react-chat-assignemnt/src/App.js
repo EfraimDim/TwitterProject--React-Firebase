@@ -8,7 +8,6 @@ import { getAuth, onAuthStateChanged, signOut  } from "firebase/auth";
 import { getFirestore, collection, orderBy, query, getDocs, doc, getDoc, where } from "firebase/firestore"
 import { Link } from "react-router-dom";
 
-// Project Console: https://console.firebase.google.com/project/twitter-react-project/overview
 // Hosting URL: https://twitter-react-project.web.app
 
 function App() {
