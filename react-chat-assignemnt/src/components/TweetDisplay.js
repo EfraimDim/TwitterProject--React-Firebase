@@ -12,7 +12,7 @@ function DisplayTweet({tweet,  setTweetList, tweetList, index, reRenderFunction,
     const { authInfo, setViewAnotherUser, setViewedUserID  } = useContext(AuthContext);
  
 
-    const likeTweet = async(tweet, index) => {
+    const likeTweet = async(tweet) => {
         try{
         const tweetRef = doc(db, "tweets", `${tweet.id}`);
         const userRef = doc(db, "users", `${authInfo.userID}`);
@@ -85,7 +85,7 @@ function DisplayTweet({tweet,  setTweetList, tweetList, index, reRenderFunction,
                     <div className={styles.tweet}>{tweet.content}</div>
                     {viewingLikedTweets ? <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div>  : <>{tweet.likersID.includes(`${authInfo.userID}`) ? 
                     <div className={styles.unlikeButton} onClick={() => unlikeTweet(tweet)}>Unlike</div> 
-                    : <div className={styles.likeButton}  onClick={() =>likeTweet(tweet, index)}>Like</div> }</>}
+                    : <div className={styles.likeButton}  onClick={() =>likeTweet(tweet)}>Like</div> }</>}
                 </div>
                 </div>
                 </div>
