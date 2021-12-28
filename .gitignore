@@ -8,6 +8,7 @@
 /.github
 /react-chat-assignemnt/.firebase
 /react-chat-assignemnt/.firebaserc
+/react-chat-assignemnt/package-lock.json
 
 
 
