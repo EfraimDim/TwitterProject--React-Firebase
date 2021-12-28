@@ -1,15 +1,21 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+/react-chat-assignemnt/node_modules
+/react-chat-assignemnt/.pnp
+/react-chat-assignemnt.pnp.js
+/micro-blogging-react-project-2-EfraimDim.git
+/.github
+/react-chat-assignemnt/.firebase
+/react-chat-assignemnt/.firebaserc
+
+
 
 # testing
 /coverage
 
 # production
-/build
+/react-chat-assignemnt/build
 
 # misc
 .DS_Store
