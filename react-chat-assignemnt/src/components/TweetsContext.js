@@ -1,3 +1,3 @@
-import { createContext } from "react"
+import { createContext } from "react";
 const Tweets = createContext();
-export default Tweets
+export default Tweets;
